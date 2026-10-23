@@ -14,20 +14,24 @@ AAPT2="$SCRATCH/android-sdk/build-tools/33.0.2/aapt2"
 ZIPALIGN="$SCRATCH/android-sdk/build-tools/33.0.2/zipalign"
 APKSIGNER="$SCRATCH/android-sdk/build-tools/33.0.2/apksigner"
 ANDROID_JAR="$SCRATCH/android-sdk/platforms/android-33/android.jar"
-KEYSTORE="$PARENT/debug.keystore"
+KEYSTORE="$DIR/keystore/debug.keystore"
+if [ ! -f "$KEYSTORE" ]; then
+    KEYSTORE="$PARENT/debug.keystore"
+fi
 ADB="$SCRATCH/platform-tools/adb"
 
 cd "$DIR"
-rm -rf bin build
-mkdir -p bin/classes build
+rm -rf build
+mkdir -p build/classes
 
 echo "==> 1. Compiling Java classes..."
-"$JAVAC" -cp "$ANDROID_JAR" -d bin/classes \
+"$JAVAC" -cp "$ANDROID_JAR" -d build/classes \
     src/com/cyber/tv/launcher/MainActivity.java \
-    src/com/cyber/tv/launcher/AndroidBridge.java
+    src/com/cyber/tv/launcher/AndroidBridge.java \
+    src/com/cyber/tv/launcher/TVHttpServer.java
 
 echo "==> 2. Converting bytecode with D8..."
-"$D8" --output build/ bin/classes/com/cyber/tv/launcher/*.class
+"$D8" --output build/ build/classes/com/cyber/tv/launcher/*.class
 
 echo "==> 3. Compiling resources and linking APK with AAPT2..."
 "$AAPT2" compile --dir res -o build/compiled_res.zip
@@ -47,6 +51,7 @@ echo "==> 5. Aligning APK with zipalign..."
 
 echo "==> 6. Signing APK with debug keystore..."
 "$APKSIGNER" sign --ks "$KEYSTORE" --ks-pass pass:android --key-pass pass:android CyberTV.apk
+rm -f CyberTV.apk.idsig
 
 echo "SUCCESS: CyberTV.apk built successfully!"
 ls -lh CyberTV.apk

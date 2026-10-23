@@ -18,6 +18,7 @@ import android.webkit.WebViewClient;
 public class MainActivity extends Activity {
     private WebView webView;
     private AudioManager audioManager;
+    private TVHttpServer httpServer;
 
     @SuppressLint("SetJavaScriptEnabled")
     @Override
@@ -64,7 +65,18 @@ public class MainActivity extends Activity {
 
         webView.addJavascriptInterface(new AndroidBridge(this), "AndroidBridge");
 
+        httpServer = new TVHttpServer(this, webView, 8080);
+        httpServer.start();
+
         webView.loadUrl("file:///android_asset/index.html");
+    }
+
+    @Override
+    protected void onDestroy() {
+        super.onDestroy();
+        if (httpServer != null) {
+            httpServer.stop();
+        }
     }
 
     @Override
