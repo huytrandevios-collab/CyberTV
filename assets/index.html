@@ -17,6 +17,9 @@
             --accent-glow: rgba(0, 242, 254, 0.45);
             --glass-card: rgba(14, 20, 36, 0.7);
             --glass-border: rgba(255, 255, 255, 0.12);
+            --focus-border: #00f2fe;
+            --focus-shadow: 0 0 18px rgba(0, 242, 254, 0.42), 0 4px 16px rgba(0, 0, 0, 0.6);
+            --badge-color: #ffd54f;
         }
 
         * {
@@ -190,10 +193,10 @@
         }
 
         .action-pill.focused {
-            border-color: var(--primary-cyan);
-            background: rgba(0, 242, 254, 0.25);
+            border-color: var(--focus-border);
+            background: rgba(255, 255, 255, 0.2);
             color: #ffffff;
-            box-shadow: 0 0 16px rgba(0, 242, 254, 0.5);
+            box-shadow: var(--focus-shadow);
             transform: scale(1.06);
         }
 
@@ -316,10 +319,10 @@
         }
 
         .tab-chip.focused {
-            background: rgba(0, 242, 254, 0.25);
-            border-color: var(--primary-cyan);
+            background: rgba(255, 255, 255, 0.18);
+            border-color: var(--focus-border);
             color: #ffffff;
-            box-shadow: 0 0 15px rgba(0, 242, 254, 0.5);
+            box-shadow: var(--focus-shadow);
             transform: scale(1.05);
         }
 
@@ -456,8 +459,8 @@
         /* 3D LASER FOCUS FOR REMOTE */
         .channel-tile.focused {
             transform: scale(1.05);
-            border-color: var(--primary-cyan);
-            box-shadow: 0 0 18px rgba(0, 242, 254, 0.42), 0 4px 16px rgba(0, 0, 0, 0.6);
+            border-color: var(--focus-border);
+            box-shadow: var(--focus-shadow);
             background: rgba(22, 34, 64, 0.95);
             z-index: 10;
         }
@@ -550,16 +553,15 @@
 
         .app-card.focused {
             transform: scale(1.06);
-            border-color: var(--primary-cyan);
+            border-color: var(--focus-border);
             background: rgba(25, 40, 75, 0.88);
-            box-shadow: 0 0 16px rgba(0, 242, 254, 0.38), 0 4px 14px rgba(0, 0, 0, 0.5);
+            box-shadow: var(--focus-shadow);
             z-index: 10;
         }
 
         .app-card.focused .app-card-icon {
-            border-color: var(--primary-cyan);
-            background: linear-gradient(135deg, rgba(0, 242, 254, 0.35), rgba(79, 172, 254, 0.2));
-            box-shadow: 0 0 16px rgba(0, 242, 254, 0.55);
+            border-color: var(--focus-border);
+            box-shadow: 0 0 16px var(--accent-glow);
         }
 
         .app-card.focused .app-card-label {
@@ -759,6 +761,207 @@
             color: #2ed573;
             text-shadow: 0 0 12px rgba(46, 213, 115, 0.6);
         }
+
+        /* THEME TOAST NOTIFICATION */
+        .theme-toast {
+            position: fixed;
+            top: 28px;
+            left: 50%;
+            transform: translateX(-50%) translateY(-24px) scale(0.92);
+            background: rgba(10, 16, 32, 0.95);
+            backdrop-filter: blur(25px);
+            -webkit-backdrop-filter: blur(25px);
+            border: 1.5px solid var(--focus-border);
+            box-shadow: 0 12px 40px rgba(0, 0, 0, 0.85), 0 0 25px var(--accent-glow);
+            border-radius: 18px;
+            padding: 10px 24px;
+            display: flex;
+            align-items: center;
+            gap: 14px;
+            z-index: 9999999;
+            opacity: 0;
+            pointer-events: none;
+            transition: all 0.24s cubic-bezier(0.16, 1, 0.3, 1);
+        }
+        .theme-toast.show {
+            opacity: 1;
+            transform: translateX(-50%) translateY(0) scale(1);
+        }
+        .theme-toast-icon {
+            font-size: 24px;
+        }
+        .theme-toast-content {
+            display: flex;
+            flex-direction: column;
+            gap: 2px;
+        }
+        .theme-toast-title {
+            font-size: 10px;
+            font-weight: 800;
+            letter-spacing: 1.5px;
+            color: var(--primary-cyan);
+            text-transform: uppercase;
+        }
+        .theme-toast-name {
+            font-size: 16px;
+            font-weight: 800;
+            color: #ffffff;
+        }
+
+        /* ========================================================
+           THEME 1: CYBER NEON (DEFAULT)
+           ======================================================== */
+        body.theme-cyber {
+            --primary-cyan: #00f2fe;
+            --secondary-blue: #4facfe;
+            --accent-glow: rgba(0, 242, 254, 0.45);
+            --glass-card: rgba(14, 20, 36, 0.7);
+            --glass-border: rgba(255, 255, 255, 0.12);
+            --focus-border: #00f2fe;
+            --focus-shadow: 0 0 18px rgba(0, 242, 254, 0.42), 0 4px 16px rgba(0, 0, 0, 0.6);
+            --badge-color: #ffd54f;
+        }
+
+        /* ========================================================
+           THEME 2: MINIMAL DARK GLASS (CLEAN, LOW CPU, STUDIO SLATE)
+           ======================================================== */
+        body.theme-minimal {
+            --primary-cyan: #90CAF9;
+            --secondary-blue: #64B5F6;
+            --accent-glow: rgba(144, 202, 249, 0.25);
+            --glass-card: rgba(20, 26, 38, 0.85);
+            --glass-border: rgba(255, 255, 255, 0.08);
+            --focus-border: #ffffff;
+            --focus-shadow: 0 0 0 2px #64B5F6, 0 6px 20px rgba(0, 0, 0, 0.75);
+            --badge-color: #90CAF9;
+        }
+
+        body.theme-minimal .tv-screen {
+            background: radial-gradient(circle at 50% 0%, #151d28 0%, #080a0f 85%) !important;
+        }
+
+        body.theme-minimal #bg-canvas {
+            display: none !important;
+        }
+
+        body.theme-minimal #weather-3d-sphere,
+        body.theme-minimal .pulse-dot {
+            animation: none !important;
+        }
+
+        body.theme-minimal .channel-tile {
+            background: rgba(255, 255, 255, 0.04);
+            border: 1px solid rgba(255, 255, 255, 0.09);
+            border-radius: 12px;
+        }
+
+        body.theme-minimal .channel-tile.focused {
+            border-color: #ffffff;
+            box-shadow: 0 0 0 2px #64B5F6, 0 8px 24px rgba(0, 0, 0, 0.85);
+            background: rgba(30, 40, 58, 0.95);
+        }
+
+        body.theme-minimal .app-card {
+            background: rgba(255, 255, 255, 0.04);
+            border: 1px solid rgba(255, 255, 255, 0.08);
+            border-radius: 12px;
+        }
+
+        body.theme-minimal .app-card.focused {
+            border-color: #ffffff;
+            box-shadow: 0 0 0 2px #64B5F6, 0 8px 20px rgba(0, 0, 0, 0.8);
+        }
+
+        body.theme-minimal .action-pill {
+            background: rgba(255, 255, 255, 0.05);
+            border: 1px solid rgba(255, 255, 255, 0.1);
+        }
+
+        body.theme-minimal .tab-chip.active {
+            background: rgba(100, 181, 246, 0.2);
+            border-color: #64B5F6;
+            color: #64B5F6;
+        }
+
+        /* ========================================================
+           THEME 3: LUXURY GOLD CINEMA (PREMIUM BLACK & GOLD)
+           ======================================================== */
+        body.theme-cinema {
+            --primary-cyan: #ffd700;
+            --secondary-blue: #f39c12;
+            --accent-glow: rgba(255, 215, 0, 0.45);
+            --glass-card: rgba(24, 20, 14, 0.88);
+            --glass-border: rgba(255, 215, 0, 0.2);
+            --focus-border: #ffd700;
+            --focus-shadow: 0 0 24px rgba(255, 215, 0, 0.5), 0 6px 22px rgba(0, 0, 0, 0.9);
+            --badge-color: #ffd700;
+        }
+
+        body.theme-cinema .tv-screen {
+            background: radial-gradient(circle at 80% 15%, rgba(70, 50, 12, 0.55) 0%, #080705 70%),
+                        linear-gradient(180deg, #090705 0%, #120e08 50%, #060504 100%) !important;
+        }
+
+        body.theme-cinema #bg-canvas {
+            opacity: 0.18;
+            filter: sepia(1) hue-rotate(5deg);
+        }
+
+        body.theme-cinema .channel-tile {
+            border-radius: 14px;
+            background: rgba(28, 22, 14, 0.88);
+            border: 1px solid rgba(255, 215, 0, 0.22);
+        }
+
+        body.theme-cinema .channel-tile.focused {
+            border-color: #ffd700;
+            box-shadow: 0 0 25px rgba(255, 215, 0, 0.55), 0 8px 24px rgba(0, 0, 0, 0.9);
+            background: rgba(40, 32, 18, 0.96);
+        }
+
+        body.theme-cinema .app-card {
+            border-radius: 14px;
+            background: rgba(28, 22, 14, 0.7);
+            border: 1px solid rgba(255, 215, 0, 0.18);
+        }
+
+        body.theme-cinema .app-card.focused {
+            border-color: #ffd700;
+            box-shadow: 0 0 22px rgba(255, 215, 0, 0.5), 0 6px 20px rgba(0, 0, 0, 0.85);
+        }
+
+        body.theme-cinema .tile-logo-box {
+            border-color: rgba(255, 215, 0, 0.4);
+            color: #ffd700;
+            background: rgba(18, 14, 9, 0.92);
+        }
+
+        body.theme-cinema .resolution-badge {
+            background: rgba(255, 215, 0, 0.18);
+            color: #ffd700;
+            border-color: rgba(255, 215, 0, 0.4);
+        }
+
+        body.theme-cinema .tab-chip.active {
+            background: linear-gradient(135deg, rgba(255, 215, 0, 0.3), rgba(243, 156, 18, 0.2));
+            border-color: #ffd700;
+            color: #ffd700;
+        }
+
+        body.theme-cinema .action-pill {
+            border-color: rgba(255, 215, 0, 0.25);
+            background: rgba(28, 22, 14, 0.7);
+        }
+
+        body.theme-cinema .action-pill.focused {
+            border-color: #ffd700;
+            box-shadow: 0 0 18px rgba(255, 215, 0, 0.45);
+        }
+
+        body.theme-cinema .lunar-pill {
+            color: #ffd700;
+            border-color: rgba(255, 215, 0, 0.35);
+        }
     </style>
 </head>
 <body>
@@ -810,6 +1013,10 @@
 
                 <!-- SMART QUICK ACTIONS -->
                 <div class="quick-actions">
+                    <div class="action-pill" data-action="theme" id="action-theme-pill">
+                        <span id="theme-btn-icon">🎨</span>
+                        <span id="theme-btn-label">Giao diện: Cyber Neon</span>
+                    </div>
                     <div class="action-pill" data-action="googletv">
                         <span>🔄</span>
                         <span>Google TV gốc</span>
@@ -1160,25 +1367,33 @@
 
         // Particles
         const canvas = document.getElementById('bg-canvas');
-        const ctx = canvas.getContext('2d');
-        let w = canvas.width = window.innerWidth;
-        let h = canvas.height = window.innerHeight;
+        const ctx = canvas ? canvas.getContext('2d') : null;
+        let w = canvas ? (canvas.width = window.innerWidth) : 1920;
+        let h = canvas ? (canvas.height = window.innerHeight) : 1080;
 
         const particles = [];
-        for (let i = 0; i < 28; i++) {
+        for (let i = 0; i < 24; i++) {
             particles.push({
                 x: Math.random() * w,
                 y: Math.random() * h,
-                size: Math.random() * 2 + 0.8,
-                speedX: (Math.random() - 0.4) * 0.35,
-                speedY: (Math.random() - 0.6) * 0.25,
-                alpha: Math.random() * 0.5 + 0.15
+                size: Math.random() * 2 + 1.0,
+                speedX: (Math.random() - 0.4) * 0.25,
+                speedY: (Math.random() - 0.6) * 0.20,
+                alpha: Math.random() * 0.4 + 0.15
             });
         }
 
+        let animFrameId = null;
+        let isCanvasAnimating = false;
+
         function renderCanvas() {
+            if (!isCanvasAnimating || !ctx) return;
             ctx.clearRect(0, 0, w, h);
-            for (let p of particles) {
+            const isCinema = (typeof currentThemeId !== 'undefined' && currentThemeId === 'cinema');
+            const particleRgb = isCinema ? '255, 215, 0' : '0, 242, 254';
+
+            for (let i = 0; i < particles.length; i++) {
+                const p = particles[i];
                 p.x += p.speedX;
                 p.y += p.speedY;
                 if (p.x < 0) p.x = w;
@@ -1188,14 +1403,31 @@
 
                 ctx.beginPath();
                 ctx.arc(p.x, p.y, p.size, 0, Math.PI * 2);
-                ctx.fillStyle = `rgba(0, 242, 254, ${p.alpha})`;
-                ctx.shadowBlur = 10;
-                ctx.shadowColor = '#00f2fe';
+                ctx.fillStyle = `rgba(${particleRgb}, ${p.alpha})`;
                 ctx.fill();
             }
-            requestAnimationFrame(renderCanvas);
+            animFrameId = requestAnimationFrame(renderCanvas);
         }
-        renderCanvas();
+
+        function startCanvas() {
+            if (isCanvasAnimating) return;
+            isCanvasAnimating = true;
+            if (canvas) canvas.style.display = 'block';
+            animFrameId = requestAnimationFrame(renderCanvas);
+        }
+
+        function stopCanvas() {
+            isCanvasAnimating = false;
+            if (animFrameId) {
+                cancelAnimationFrame(animFrameId);
+                animFrameId = null;
+            }
+            if (canvas) {
+                canvas.style.display = 'none';
+                if (ctx) ctx.clearRect(0, 0, w, h);
+            }
+        }
+        startCanvas();
 
         // RAM Indicator
         function refreshRAM() {
@@ -1494,13 +1726,24 @@
                 const target = actionPills[colIndex];
                 if (target) {
                     target.classList.add('focused');
-                    updateSpotlight(
-                        target.innerText.trim(),
-                        'Bấm phím OK để kích hoạt tiện ích hệ thống ngay lập tức.',
-                        'HỆ THỐNG • TÙY CHỌN',
-                        'KÍCH HOẠT [OK]',
-                        null
-                    );
+                    const act = target.getAttribute('data-action');
+                    if (act === 'theme') {
+                        updateSpotlight(
+                            'GIAO DIỆN PREMIUM',
+                            'Bấm phím OK để chuyển đổi qua lại 3 giao diện: Cyber Neon, Minimal Dark Glass, Luxury Gold Cinema.',
+                            'THEME ENGINE • P0',
+                            'ĐỔI GIAO DIỆN [OK]',
+                            null
+                        );
+                    } else {
+                        updateSpotlight(
+                            target.innerText.trim(),
+                            'Bấm phím OK để kích hoạt tiện ích hệ thống ngay lập tức.',
+                            'HỆ THỐNG • TÙY CHỌN',
+                            'KÍCH HOẠT [OK]',
+                            null
+                        );
+                    }
                 }
             } else if (activeRow === 1) {
                 colIndex = Math.max(0, Math.min(colIndex, tabChips.length - 1));
@@ -1567,7 +1810,9 @@
                 const target = actionPills[colIndex];
                 if (!target) return;
                 const act = target.getAttribute('data-action');
-                if (act === 'googletv') {
+                if (act === 'theme') {
+                    cycleNextTheme();
+                } else if (act === 'googletv') {
                     if (window.AndroidBridge && window.AndroidBridge.openGoogleTV) {
                         window.AndroidBridge.openGoogleTV();
                     }
@@ -1850,6 +2095,139 @@
             else if (e.key === 'Escape' || e.key === 'Backspace') onBackPress();
         });
 
+        // ==========================================
+        // THEME RENDERING ENGINE (PHASE 2 & 3)
+        // ==========================================
+        const THEME_MANIFESTS = {
+            'cyber': {
+                id: 'cyber',
+                name: 'Cyber Neon',
+                version: '1.0.0',
+                author: 'CyberTV Premium',
+                accent: '#00f2fe',
+                canvasParticles: true,
+                desc: 'Giao diện tương lai sắc nét với ánh sáng Cyber Neon và hiệu ứng hạt 3D.'
+            },
+            'minimal': {
+                id: 'minimal',
+                name: 'Minimal Dark Glass',
+                version: '1.0.0',
+                author: 'CyberTV Premium',
+                accent: '#90CAF9',
+                canvasParticles: false,
+                desc: 'Thiết kế tối giản kính mờ sang trọng, loại bỏ chuyển động thừa, tiết kiệm CPU.'
+            },
+            'cinema': {
+                id: 'cinema',
+                name: 'Luxury Gold Cinema',
+                version: '1.0.0',
+                author: 'CyberTV Premium',
+                accent: '#ffd700',
+                canvasParticles: true,
+                desc: 'Đẳng cấp rạp chiếu phim với ánh vàng hoàng gia và tông màu đen obsidian.'
+            }
+        };
+
+        const THEME_CYCLE = ['cyber', 'minimal', 'cinema'];
+        let currentThemeId = 'cyber';
+
+        function validateTheme(themeId) {
+            if (themeId && THEME_MANIFESTS.hasOwnProperty(themeId)) {
+                return themeId;
+            }
+            console.warn('Theme invalid, falling back to cyber:', themeId);
+            return 'cyber'; // Safe fallback
+        }
+
+        function applyTheme(themeId, saveToStorage = true) {
+            const validId = validateTheme(themeId);
+            currentThemeId = validId;
+            const theme = THEME_MANIFESTS[validId];
+
+            // Apply body classes
+            document.body.classList.remove('theme-cyber', 'theme-minimal', 'theme-cinema');
+            document.body.classList.add('theme-' + validId);
+
+            // Update Particle Canvas activity (Minimal disables particles -> saves CPU!)
+            if (theme.canvasParticles) {
+                if (typeof startCanvas === 'function') startCanvas();
+            } else {
+                if (typeof stopCanvas === 'function') stopCanvas();
+            }
+
+            // Update Theme Pill in Action Bar
+            const themeLabelEl = document.getElementById('theme-btn-label');
+            if (themeLabelEl) {
+                themeLabelEl.innerText = 'Giao diện: ' + theme.name;
+            }
+
+            // Save to Native SharedPreferences + Web localStorage
+            if (saveToStorage) {
+                try {
+                    localStorage.setItem('cybertv_theme', validId);
+                    if (window.AndroidBridge && window.AndroidBridge.saveTheme) {
+                        window.AndroidBridge.saveTheme(validId);
+                    }
+                } catch (e) {
+                    console.error('Save theme error:', e);
+                }
+            }
+
+            // Re-apply focus styles smoothly without reloading video stream
+            refreshFocus();
+
+            console.log('Theme applied successfully:', validId);
+            return true;
+        }
+
+        function cycleNextTheme() {
+            const currentIdx = THEME_CYCLE.indexOf(currentThemeId);
+            const nextIdx = (currentIdx + 1) % THEME_CYCLE.length;
+            const nextThemeId = THEME_CYCLE[nextIdx];
+            applyTheme(nextThemeId, true);
+
+            // Show HUD indicator
+            const theme = THEME_MANIFESTS[nextThemeId];
+            showThemeToast(theme);
+        }
+
+        function showThemeToast(theme) {
+            let toast = document.getElementById('theme-switch-toast');
+            if (!toast) {
+                toast = document.createElement('div');
+                toast.id = 'theme-switch-toast';
+                toast.className = 'theme-toast';
+                document.body.appendChild(toast);
+            }
+            toast.innerHTML = `
+                <div class="theme-toast-icon">🎨</div>
+                <div class="theme-toast-content">
+                    <div class="theme-toast-title">ĐÃ CHUYỂN GIAO DIỆN</div>
+                    <div class="theme-toast-name">${theme.name}</div>
+                </div>
+            `;
+            toast.classList.add('show');
+            clearTimeout(window.__themeToastTimeout);
+            window.__themeToastTimeout = setTimeout(() => {
+                toast.classList.remove('show');
+            }, 1800);
+        }
+
+        function initSavedTheme() {
+            let saved = 'cyber';
+            try {
+                if (window.AndroidBridge && window.AndroidBridge.getSavedTheme) {
+                    saved = window.AndroidBridge.getSavedTheme();
+                } else {
+                    saved = localStorage.getItem('cybertv_theme') || 'cyber';
+                }
+            } catch (e) {
+                console.warn('Bridge getSavedTheme error', e);
+                saved = localStorage.getItem('cybertv_theme') || 'cyber';
+            }
+            applyTheme(saved, false);
+        }
+
         // Load Original App Icons directly from Android System
         function loadRealAppIcons() {
             document.querySelectorAll('.app-card').forEach(card => {
@@ -1871,8 +2249,9 @@
             });
         }
 
-        // Initialize focus on first channel and load real app icons
+        // Initialize theme, focus on first channel and load real app icons
         setTimeout(() => {
+            initSavedTheme();
             refreshFocus();
             loadRealAppIcons();
         }, 150);

@@ -1,0 +1,39 @@
+{
+  "engineVersion": "1.0.0",
+  "defaultTheme": "cyber",
+  "themes": [
+    {
+      "id": "cyber",
+      "name": "Cyber Neon",
+      "version": "1.0.0",
+      "author": "CyberTV Studio",
+      "accent": "#00f2fe",
+      "layout": "horizontal-shelf",
+      "canvasParticles": true,
+      "lowPowerMode": false,
+      "description": "Futuristic spatial launcher with neon blue cyber aesthetic, 3D particle canvas and glowing laser focus."
+    },
+    {
+      "id": "minimal",
+      "name": "Minimal Dark Glass",
+      "version": "1.0.0",
+      "author": "CyberTV Studio",
+      "accent": "#90CAF9",
+      "layout": "vertical-rail",
+      "canvasParticles": false,
+      "lowPowerMode": true,
+      "description": "Ultra-clean dark studio slate with frosted glass cards, no motion distraction and near-zero CPU consumption."
+    },
+    {
+      "id": "cinema",
+      "name": "Luxury Gold Cinema",
+      "version": "1.0.0",
+      "author": "CyberTV Studio",
+      "accent": "#ffd700",
+      "layout": "cinematic-billboard",
+      "canvasParticles": true,
+      "lowPowerMode": false,
+      "description": "Premium 24K Royal Gold & Obsidian Black IMAX cinema lounge aesthetic with warm ambient aura."
+    }
+  ]
+}

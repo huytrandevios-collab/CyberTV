@@ -1,0 +1,15 @@
+{
+  "id": "cinema",
+  "name": "Luxury Gold Cinema",
+  "version": "1.0.0",
+  "author": "CyberTV Studio",
+  "tokens": {
+    "primaryAccent": "#ffd700",
+    "secondaryAccent": "#f39c12",
+    "background": "radial-gradient(circle at 80% 15%, rgba(70, 50, 12, 0.55) 0%, #080705 70%)",
+    "cardRadius": "14px",
+    "focusBorder": "#ffd700",
+    "focusShadow": "0 0 24px rgba(255, 215, 0, 0.5), 0 6px 22px rgba(0, 0, 0, 0.9)",
+    "canvasParticles": true
+  }
+}

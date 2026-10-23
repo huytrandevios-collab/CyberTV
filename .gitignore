@@ -1,0 +1,4 @@
+bin/
+build/
+*.idsig
+.DS_Store

@@ -55,6 +55,26 @@ public class AndroidBridge {
     }
 
     @JavascriptInterface
+    public void saveTheme(String themeId) {
+        try {
+            activity.getSharedPreferences("cybertv_prefs", Context.MODE_PRIVATE)
+                    .edit()
+                    .putString("current_theme", themeId)
+                    .apply();
+        } catch (Exception ignored) {}
+    }
+
+    @JavascriptInterface
+    public String getSavedTheme() {
+        try {
+            return activity.getSharedPreferences("cybertv_prefs", Context.MODE_PRIVATE)
+                    .getString("current_theme", "cyber");
+        } catch (Exception e) {
+            return "cyber";
+        }
+    }
+
+    @JavascriptInterface
     public void launchApp(final String packageName) {
         final String targetPkg = resolvePackage(packageName);
         activity.runOnUiThread(() -> {
