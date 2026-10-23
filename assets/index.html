@@ -178,7 +178,7 @@
         .action-pill {
             display: flex;
             align-items: center;
-            gap: 7px;
+            gap: 8px;
             background: rgba(255, 255, 255, 0.08);
             border: 1px solid rgba(255, 255, 255, 0.15);
             backdrop-filter: blur(25px);
@@ -189,15 +189,32 @@
             font-weight: 600;
             color: rgba(255, 255, 255, 0.85);
             cursor: pointer;
-            transition: all 0.2s ease;
+            transition: all 0.2s cubic-bezier(0.16, 1, 0.3, 1);
+        }
+
+        .action-pill.icon-only {
+            padding: 5px;
+            min-width: 38px;
+            height: 34px;
+            justify-content: center;
+            border-radius: 12px;
+        }
+
+        .action-icon-img {
+            width: 24px;
+            height: 24px;
+            border-radius: 6px;
+            object-fit: cover;
+            display: block;
+            filter: drop-shadow(0 2px 4px rgba(0, 0, 0, 0.35));
         }
 
         .action-pill.focused {
             border-color: var(--focus-border);
-            background: rgba(255, 255, 255, 0.2);
+            background: rgba(255, 255, 255, 0.22);
             color: #ffffff;
             box-shadow: var(--focus-shadow);
-            transform: scale(1.06);
+            transform: scale(1.12);
         }
 
         /* 3D WEATHER CAPSULE (NỀN TRONG SUỐT) */
@@ -1014,20 +1031,17 @@
                 <!-- SMART QUICK ACTIONS -->
                 <div class="quick-actions">
                     <div class="action-pill" data-action="theme" id="action-theme-pill">
-                        <span id="theme-btn-icon">🎨</span>
+                        <img class="action-icon-img" src="icons/icon_theme.png" alt="Giao diện">
                         <span id="theme-btn-label">Giao diện: Cyber Neon</span>
                     </div>
-                    <div class="action-pill" data-action="googletv">
-                        <span>🔄</span>
-                        <span>Google TV gốc</span>
+                    <div class="action-pill icon-only" data-action="googletv" id="action-googletv-pill">
+                        <img class="action-icon-img" src="icons/icon_googletv.png" alt="Google TV">
                     </div>
-                    <div class="action-pill" data-action="cleanram">
-                        <span>🚀</span>
-                        <span id="ram-indicator">850 MB RAM</span>
+                    <div class="action-pill icon-only" data-action="cleanram" id="action-cleanram-pill">
+                        <img class="action-icon-img" src="icons/icon_boost.png" alt="Tăng tốc">
                     </div>
-                    <div class="action-pill" data-action="settings">
-                        <span>⚙️</span>
-                        <span>Cài đặt TV</span>
+                    <div class="action-pill icon-only" data-action="settings" id="action-settings-pill">
+                        <img class="action-icon-img" src="icons/icon_settings.png" alt="Cài đặt">
                     </div>
                 </div>
 
@@ -1735,12 +1749,35 @@
                             'ĐỔI GIAO DIỆN [OK]',
                             null
                         );
-                    } else {
+                    } else if (act === 'googletv') {
                         updateSpotlight(
-                            target.innerText.trim(),
-                            'Bấm phím OK để kích hoạt tiện ích hệ thống ngay lập tức.',
-                            'HỆ THỐNG • TÙY CHỌN',
-                            'KÍCH HOẠT [OK]',
+                            'GOOGLE TV GỐC',
+                            'Trở về giao diện màn hình chính Google TV mặc định của tivi. Bấm phím OK để chuyển đổi.',
+                            'CHUYỂN ĐỔI LAUNCHER',
+                            'VỀ GOOGLE TV [OK]',
+                            null
+                        );
+                    } else if (act === 'cleanram') {
+                        let ramNote = 'Giải phóng bộ nhớ RAM và dọn sạch các tiến trình nền để tivi hoạt động siêu tốc.';
+                        if (window.AndroidBridge && window.AndroidBridge.getRamInfo) {
+                            try {
+                                const info = JSON.parse(window.AndroidBridge.getRamInfo());
+                                ramNote = `Bộ nhớ khả dụng: ${info.availMb} MB RAM. Bấm phím OK để dọn RAM tức thì.`;
+                            } catch (e) {}
+                        }
+                        updateSpotlight(
+                            'TĂNG TỐC TIVI',
+                            ramNote,
+                            'TỐI ƯU HIỆU NĂNG',
+                            'DỌN RAM [OK]',
+                            null
+                        );
+                    } else if (act === 'settings') {
+                        updateSpotlight(
+                            'CÀI ĐẶT HỆ THỐNG',
+                            'Mở bảng điều khiển cài đặt chính thức của Android TV (Wi-Fi, Bluetooth, Màn hình, Âm thanh).',
+                            'CÀI ĐẶT TV',
+                            'MỞ CÀI ĐẶT [OK]',
                             null
                         );
                     }
@@ -2200,7 +2237,7 @@
                 document.body.appendChild(toast);
             }
             toast.innerHTML = `
-                <div class="theme-toast-icon">🎨</div>
+                <div class="theme-toast-icon"><img src="icons/icon_theme.png" style="width:34px;height:34px;border-radius:8px;object-fit:cover;display:block;"></div>
                 <div class="theme-toast-content">
                     <div class="theme-toast-title">ĐÃ CHUYỂN GIAO DIỆN</div>
                     <div class="theme-toast-name">${theme.name}</div>
