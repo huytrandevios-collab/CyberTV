@@ -1,0 +1,1882 @@
+<!DOCTYPE html>
+<html lang="vi">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=no">
+    <title>Cyber TV 82 Channels Ultra Hub</title>
+    <link rel="preconnect" href="https://1011154949.vnns.net" crossorigin>
+    <link rel="preconnect" href="https://e1.endpoint.cdn.sctvonline.vn" crossorigin>
+    <link rel="dns-prefetch" href="https://1011154949.vnns.net">
+    <link rel="dns-prefetch" href="https://e1.endpoint.cdn.sctvonline.vn">
+    <script src="hls.min.js"></script>
+    <script src="channels.js"></script>
+    <style>
+        :root {
+            --primary-cyan: #00f2fe;
+            --secondary-blue: #4facfe;
+            --accent-glow: rgba(0, 242, 254, 0.45);
+            --glass-card: rgba(14, 20, 36, 0.7);
+            --glass-border: rgba(255, 255, 255, 0.12);
+        }
+
+        * {
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0;
+            user-select: none;
+            -webkit-user-select: none;
+            font-family: -apple-system, "SF Pro Display", "SF Pro Text", "Segoe UI", Roboto, sans-serif;
+        }
+
+        body {
+            background: #04060d;
+            color: #ffffff;
+            height: 100vh;
+            width: 100vw;
+            overflow: hidden;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+
+        /* 16:9 4K TV CONTAINER */
+        .tv-screen {
+            position: relative;
+            width: 100vw;
+            height: 100vh;
+            background: radial-gradient(circle at 85% 15%, rgba(35, 75, 140, 0.45) 0%, rgba(4, 7, 16, 0.98) 70%),
+                        linear-gradient(180deg, #04060e 0%, #070e1c 50%, #03050a 100%);
+            overflow: hidden;
+            display: flex;
+            flex-direction: column;
+            justify-content: space-between;
+            padding: 22px 48px 16px 48px;
+        }
+
+        #hero-backdrop {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 65%;
+            background-size: cover;
+            background-position: center 20%;
+            opacity: 0.22;
+            filter: blur(3px);
+            transition: all 0.4s ease;
+            mask-image: linear-gradient(180deg, rgba(0,0,0,1) 30%, transparent 100%);
+            -webkit-mask-image: linear-gradient(180deg, rgba(0,0,0,1) 30%, transparent 100%);
+            pointer-events: none;
+            z-index: 1;
+        }
+
+        #bg-canvas {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            pointer-events: none;
+            z-index: 1;
+            opacity: 0.6;
+        }
+
+        .ui-layer {
+            position: relative;
+            z-index: 2;
+            display: flex;
+            flex-direction: column;
+            height: 100%;
+            justify-content: space-between;
+        }
+
+        /* TOP BAR */
+        .top-bar {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        .header-left {
+            display: flex;
+            align-items: center;
+            gap: 16px;
+        }
+
+        .digital-clock {
+            font-size: 50px;
+            font-weight: 300;
+            letter-spacing: -1.5px;
+            line-height: 1;
+            background: linear-gradient(180deg, #ffffff 50%, rgba(255, 255, 255, 0.65) 100%);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+        }
+
+        .date-badge {
+            display: flex;
+            flex-direction: column;
+            gap: 4px;
+            justify-content: center;
+        }
+
+        .solar-date {
+            font-size: 14.5px;
+            font-weight: 600;
+            color: #ffffff;
+            letter-spacing: 0.3px;
+            white-space: nowrap;
+        }
+
+        .lunar-pill {
+            display: inline-flex;
+            align-items: center;
+            gap: 4px;
+            background: rgba(255, 193, 7, 0.13);
+            border: 1px solid rgba(255, 193, 7, 0.32);
+            border-radius: 8px;
+            padding: 2px 8px;
+            font-size: 10.5px;
+            font-weight: 600;
+            color: #ffd54f;
+            letter-spacing: 0.2px;
+            white-space: nowrap;
+            width: fit-content;
+            backdrop-filter: blur(8px);
+            -webkit-backdrop-filter: blur(8px);
+        }
+
+        .lunar-icon {
+            font-size: 10px;
+            line-height: 1;
+        }
+
+        .pulse-dot {
+            width: 7px;
+            height: 7px;
+            background: #00ff88;
+            border-radius: 50%;
+            box-shadow: 0 0 10px #00ff88;
+            animation: radarPulse 1.5s infinite;
+        }
+
+        @keyframes radarPulse {
+            0%, 100% { transform: scale(1); opacity: 1; }
+            50% { transform: scale(1.4); opacity: 0.5; }
+        }
+
+        /* QUICK ACTIONS */
+        .quick-actions {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+
+        .action-pill {
+            display: flex;
+            align-items: center;
+            gap: 7px;
+            background: rgba(255, 255, 255, 0.08);
+            border: 1px solid rgba(255, 255, 255, 0.15);
+            backdrop-filter: blur(25px);
+            -webkit-backdrop-filter: blur(25px);
+            padding: 5px 14px;
+            border-radius: 18px;
+            font-size: 11px;
+            font-weight: 600;
+            color: rgba(255, 255, 255, 0.85);
+            cursor: pointer;
+            transition: all 0.2s ease;
+        }
+
+        .action-pill.focused {
+            border-color: var(--primary-cyan);
+            background: rgba(0, 242, 254, 0.25);
+            color: #ffffff;
+            box-shadow: 0 0 16px rgba(0, 242, 254, 0.5);
+            transform: scale(1.06);
+        }
+
+        /* 3D WEATHER CAPSULE (NỀN TRONG SUỐT) */
+        .weather-capsule {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            background: transparent;
+            backdrop-filter: none;
+            -webkit-backdrop-filter: none;
+            border: none;
+            padding: 0 4px;
+            box-shadow: none;
+        }
+
+        .weather-paper-icon {
+            position: relative;
+            width: 38px;
+            height: 34px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            filter: drop-shadow(0 4px 10px rgba(0, 0, 0, 0.35));
+            animation: paperWeatherFloat 4s ease-in-out infinite alternate;
+        }
+
+        .weather-paper-icon svg {
+            width: 100%;
+            height: 100%;
+            overflow: visible;
+        }
+
+        @keyframes paperWeatherFloat {
+            0% { transform: translateY(0px) scale(1); }
+            100% { transform: translateY(-2px) scale(1.04); }
+        }
+
+        /* CINEMATIC HERO SPOTLIGHT */
+        .hero-spotlight {
+            display: flex;
+            flex-direction: column;
+            gap: 6px;
+            margin: 4px 0 8px 0;
+            max-width: 820px;
+        }
+
+        .hero-category-tag {
+            font-size: 11px;
+            font-weight: 700;
+            color: var(--primary-cyan);
+            letter-spacing: 1.2px;
+            text-transform: uppercase;
+            display: flex;
+            align-items: center;
+            gap: 6px;
+        }
+
+        .hero-category-tag::before {
+            content: '';
+            display: inline-block;
+            width: 6px;
+            height: 6px;
+            border-radius: 50%;
+            background: #00ff88;
+            box-shadow: 0 0 8px #00ff88;
+        }
+
+        .hero-title {
+            font-size: 26px;
+            font-weight: 800;
+            letter-spacing: -0.5px;
+            line-height: 1.15;
+            color: #ffffff;
+            text-shadow: 0 4px 18px rgba(0, 0, 0, 0.85);
+        }
+
+        .hero-desc {
+            font-size: 13px;
+            color: rgba(255, 255, 255, 0.78);
+            line-height: 1.5;
+            max-width: 800px;
+        }
+
+        /* SECTION: IPTV CHANNELS (88 CHANNELS) */
+        .section-iptv {
+            display: flex;
+            flex-direction: column;
+            gap: 6px;
+        }
+
+        .section-header-iptv {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+        }
+
+        .tabs-row {
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+
+        .tab-chip {
+            padding: 3px 12px;
+            border-radius: 10px;
+            background: rgba(255, 255, 255, 0.06);
+            border: 1px solid rgba(255, 255, 255, 0.1);
+            font-size: 10.5px;
+            font-weight: 600;
+            color: rgba(255, 255, 255, 0.65);
+            cursor: pointer;
+            transition: all 0.2s ease;
+        }
+
+        .tab-chip.active {
+            background: rgba(0, 242, 254, 0.16);
+            border-color: rgba(0, 242, 254, 0.4);
+            color: #ffffff;
+        }
+
+        .tab-chip.focused {
+            background: rgba(0, 242, 254, 0.25);
+            border-color: var(--primary-cyan);
+            color: #ffffff;
+            box-shadow: 0 0 15px rgba(0, 242, 254, 0.5);
+            transform: scale(1.05);
+        }
+
+        .channel-stream-row {
+            display: flex;
+            gap: 14px;
+            overflow-x: auto;
+            overflow-y: hidden;
+            padding: 24px 14px 26px 14px;
+            scrollbar-width: none;
+            min-height: 164px;
+            margin: -6px 0;
+        }
+
+        .channel-stream-row::-webkit-scrollbar {
+            display: none;
+        }
+
+        .channel-tile {
+            flex: 0 0 186px;
+            height: 114px;
+            background: rgba(18, 25, 45, 0.7);
+            border-radius: 16px;
+            border: 2px solid rgba(255, 255, 255, 0.08);
+            position: relative;
+            overflow: hidden;
+            cursor: pointer;
+            backdrop-filter: blur(20px);
+            -webkit-backdrop-filter: blur(20px);
+            transition: all 0.2s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+            display: flex;
+            flex-direction: column;
+            justify-content: flex-end;
+            padding: 10px;
+        }
+
+        .tile-stream-bg {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+            opacity: 0.35;
+            transition: opacity 0.3s ease;
+        }
+
+        .tile-glass-overlay {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: linear-gradient(180deg, rgba(0,0,0,0.1) 0%, rgba(4, 7, 16, 0.92) 100%);
+        }
+
+        .tile-top-tag {
+            position: absolute;
+            top: 8px;
+            left: 8px;
+            display: flex;
+            align-items: center;
+            gap: 5px;
+            z-index: 3;
+        }
+
+        .tile-logo-box {
+            width: 46px;
+            height: 26px;
+            border-radius: 6px;
+            background: rgba(12, 18, 32, 0.9);
+            border: 1px solid rgba(255, 255, 255, 0.22);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-weight: 800;
+            font-size: 10px;
+            padding: 2px 4px;
+            color: #00f2fe;
+            box-shadow: 0 2px 6px rgba(0,0,0,0.4);
+            overflow: hidden;
+            flex-shrink: 0;
+        }
+
+        .tile-logo-box img {
+            max-width: 100%;
+            max-height: 100%;
+            object-fit: contain;
+            display: block;
+        }
+
+        .channel-num-badge {
+            font-size: 8.5px;
+            font-weight: 800;
+            color: rgba(255, 255, 255, 0.7);
+            background: rgba(255, 255, 255, 0.12);
+            padding: 1px 5px;
+            border-radius: 4px;
+        }
+
+        .resolution-badge {
+            font-size: 8px;
+            font-weight: 800;
+            background: rgba(0, 242, 254, 0.15);
+            color: var(--primary-cyan);
+            border: 1px solid rgba(0, 242, 254, 0.3);
+            padding: 1px 4px;
+            border-radius: 3px;
+        }
+
+        .tile-info {
+            position: relative;
+            z-index: 3;
+        }
+
+        .tile-channel-title {
+            font-size: 13.5px;
+            font-weight: 700;
+            color: #ffffff;
+            margin-bottom: 2px;
+            white-space: nowrap;
+            overflow: hidden;
+            text-overflow: ellipsis;
+        }
+
+        .tile-channel-desc {
+            font-size: 10px;
+            color: rgba(255, 255, 255, 0.6);
+            white-space: nowrap;
+            overflow: hidden;
+            text-overflow: ellipsis;
+        }
+
+        /* 3D LASER FOCUS FOR REMOTE */
+        .channel-tile.focused {
+            transform: scale(1.05);
+            border-color: var(--primary-cyan);
+            box-shadow: 0 0 18px rgba(0, 242, 254, 0.42), 0 4px 16px rgba(0, 0, 0, 0.6);
+            background: rgba(22, 34, 64, 0.95);
+            z-index: 10;
+        }
+
+        .channel-tile.focused .tile-stream-bg {
+            opacity: 0.95;
+        }
+
+        /* SECTION: APPS */
+        .section-apps {
+            display: flex;
+            flex-direction: column;
+            gap: 5px;
+        }
+
+        .section-title {
+            font-size: 12.5px;
+            font-weight: 700;
+            color: rgba(255, 255, 255, 0.8);
+            text-transform: uppercase;
+            letter-spacing: 0.6px;
+        }
+
+        .apps-scroll-row {
+            display: flex;
+            gap: 12px;
+            overflow-x: auto;
+            overflow-y: hidden;
+            padding: 14px 8px 16px 8px;
+            scrollbar-width: none;
+            margin: -4px 0;
+        }
+
+        .apps-scroll-row::-webkit-scrollbar {
+            display: none;
+        }
+
+        .app-card {
+            flex: 0 0 98px;
+            height: 86px;
+            background: rgba(18, 25, 45, 0.55);
+            border: 1px solid var(--glass-border);
+            border-radius: 16px;
+            backdrop-filter: blur(30px);
+            -webkit-backdrop-filter: blur(30px);
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            gap: 5px;
+            cursor: pointer;
+            transition: all 0.2s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+            padding: 5px;
+            text-align: center;
+        }
+
+        .app-card-icon {
+            width: 44px;
+            height: 44px;
+            border-radius: 12px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 18px;
+            background: rgba(255, 255, 255, 0.08);
+            border: 1px solid rgba(255, 255, 255, 0.12);
+            box-shadow: 0 6px 15px rgba(0, 0, 0, 0.35);
+            transition: all 0.2s ease;
+            overflow: hidden;
+            padding: 2px;
+        }
+
+        .app-card-icon img {
+            width: 100%;
+            height: 100%;
+            object-fit: contain;
+            border-radius: 9px;
+            display: block;
+        }
+
+        .app-card-label {
+            font-size: 10px;
+            font-weight: 600;
+            color: rgba(255, 255, 255, 0.7);
+            white-space: nowrap;
+            overflow: hidden;
+            text-overflow: ellipsis;
+            max-width: 84px;
+        }
+
+        .app-card.focused {
+            transform: scale(1.06);
+            border-color: var(--primary-cyan);
+            background: rgba(25, 40, 75, 0.88);
+            box-shadow: 0 0 16px rgba(0, 242, 254, 0.38), 0 4px 14px rgba(0, 0, 0, 0.5);
+            z-index: 10;
+        }
+
+        .app-card.focused .app-card-icon {
+            border-color: var(--primary-cyan);
+            background: linear-gradient(135deg, rgba(0, 242, 254, 0.35), rgba(79, 172, 254, 0.2));
+            box-shadow: 0 0 16px rgba(0, 242, 254, 0.55);
+        }
+
+        .app-card.focused .app-card-label {
+            color: #ffffff;
+            font-weight: 700;
+        }
+
+        /* FULLSCREEN VIDEO PLAYER MODAL */
+        #video-modal {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100vw;
+            height: 100vh;
+            background: #000000;
+            z-index: 999;
+            display: none;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+        }
+
+        #video-modal.active {
+            display: flex;
+        }
+
+        #video-player {
+            width: 100%;
+            height: 100%;
+            object-fit: contain;
+            background: #000000;
+            opacity: 0;
+            transition: opacity 0.25s ease-out;
+        }
+
+        #video-player.ready {
+            opacity: 1;
+        }
+
+        /* Suppress all native Android/Chromium video posters and play buttons */
+        video::-webkit-media-controls {
+            display: none !important;
+        }
+        video::-webkit-media-controls-start-playback-button,
+        video::-webkit-media-controls-overlay-play-button,
+        video::-webkit-media-controls-play-button {
+            display: none !important;
+            -webkit-appearance: none !important;
+            opacity: 0 !important;
+            visibility: hidden !important;
+        }
+
+        .player-hud-overlay {
+            position: absolute;
+            top: 26px;
+            left: 36px;
+            background: rgba(0, 0, 0, 0.75);
+            backdrop-filter: blur(25px);
+            -webkit-backdrop-filter: blur(25px);
+            padding: 10px 22px;
+            border-radius: 18px;
+            border: 1px solid rgba(255, 255, 255, 0.18);
+            display: flex;
+            align-items: center;
+            gap: 14px;
+            box-shadow: 0 10px 30px rgba(0,0,0,0.8);
+            transition: opacity 0.5s ease;
+        }
+
+        .player-back-tip {
+            position: absolute;
+            bottom: 24px;
+            right: 36px;
+            background: rgba(0, 0, 0, 0.75);
+            backdrop-filter: blur(20px);
+            padding: 8px 18px;
+            border-radius: 12px;
+            font-size: 13px;
+            color: rgba(255, 255, 255, 0.8);
+            border: 1px solid rgba(255, 255, 255, 0.12);
+        }
+
+        #player-spinner {
+            position: absolute;
+            width: 50px;
+            height: 50px;
+            border: 4px solid rgba(255, 255, 255, 0.15);
+            border-top-color: var(--primary-cyan);
+            border-radius: 50%;
+            animation: spin 0.8s linear infinite;
+        }
+
+        @keyframes spin {
+            to { transform: rotate(360deg); }
+        }
+
+        /* FLOATING NUMERIC CHANNEL QUICK JUMP HUD */
+        .channel-quick-jump {
+            position: fixed;
+            top: 28px;
+            right: 36px;
+            background: rgba(10, 16, 32, 0.94);
+            backdrop-filter: blur(25px);
+            -webkit-backdrop-filter: blur(25px);
+            border: 1.5px solid rgba(0, 242, 254, 0.65);
+            border-radius: 18px;
+            padding: 10px 22px;
+            display: flex;
+            align-items: center;
+            gap: 14px;
+            box-shadow: 0 10px 40px rgba(0, 0, 0, 0.85), 0 0 25px rgba(0, 242, 254, 0.35);
+            z-index: 999999;
+            opacity: 0;
+            transform: translateY(-24px) scale(0.92);
+            pointer-events: none;
+            transition: opacity 0.22s cubic-bezier(0.16, 1, 0.3, 1), transform 0.22s cubic-bezier(0.16, 1, 0.3, 1), border-color 0.2s ease, box-shadow 0.2s ease;
+        }
+
+        .channel-quick-jump.visible {
+            opacity: 1;
+            transform: translateY(0) scale(1);
+        }
+
+        .quick-jump-badge {
+            display: flex;
+            align-items: center;
+            gap: 6px;
+            background: rgba(0, 242, 254, 0.15);
+            border: 1px solid rgba(0, 242, 254, 0.4);
+            padding: 4px 12px;
+            border-radius: 10px;
+        }
+
+        .quick-jump-icon {
+            font-size: 16px;
+        }
+
+        .quick-jump-num {
+            font-size: 28px;
+            font-weight: 900;
+            color: #00f2fe;
+            font-family: -apple-system, BlinkMacSystemFont, 'SF Pro Display', 'Roboto', sans-serif;
+            letter-spacing: 2px;
+            min-width: 42px;
+            text-align: center;
+            text-shadow: 0 0 12px rgba(0, 242, 254, 0.6);
+        }
+
+        .quick-jump-info {
+            display: flex;
+            flex-direction: column;
+            gap: 2px;
+        }
+
+        .quick-jump-name {
+            font-size: 15px;
+            font-weight: 800;
+            color: #ffffff;
+            max-width: 240px;
+            white-space: nowrap;
+            overflow: hidden;
+            text-overflow: ellipsis;
+        }
+
+        .quick-jump-hint {
+            font-size: 11px;
+            font-weight: 600;
+            color: rgba(255, 255, 255, 0.65);
+        }
+
+        .channel-quick-jump.error {
+            border-color: rgba(255, 75, 75, 0.8);
+            box-shadow: 0 10px 40px rgba(0, 0, 0, 0.85), 0 0 25px rgba(255, 75, 75, 0.4);
+        }
+
+        .channel-quick-jump.error .quick-jump-badge {
+            background: rgba(255, 75, 75, 0.18);
+            border-color: rgba(255, 75, 75, 0.5);
+        }
+
+        .channel-quick-jump.error .quick-jump-num {
+            color: #ff5252;
+            text-shadow: 0 0 12px rgba(255, 75, 75, 0.6);
+        }
+
+        .channel-quick-jump.success {
+            border-color: rgba(46, 213, 115, 0.8);
+            box-shadow: 0 10px 40px rgba(0, 0, 0, 0.85), 0 0 25px rgba(46, 213, 115, 0.4);
+        }
+
+        .channel-quick-jump.success .quick-jump-badge {
+            background: rgba(46, 213, 115, 0.18);
+            border-color: rgba(46, 213, 115, 0.5);
+        }
+
+        .channel-quick-jump.success .quick-jump-num {
+            color: #2ed573;
+            text-shadow: 0 0 12px rgba(46, 213, 115, 0.6);
+        }
+    </style>
+</head>
+<body>
+
+    <!-- FLOATING NUMERIC CHANNEL QUICK JUMP OSD OVERLAY -->
+    <div id="channel-quick-jump" class="channel-quick-jump">
+        <div class="quick-jump-badge">
+            <span class="quick-jump-icon">🔢</span>
+            <span class="quick-jump-num" id="quick-jump-num">--</span>
+        </div>
+        <div class="quick-jump-info">
+            <div class="quick-jump-name" id="quick-jump-name">Đang nhập số kênh...</div>
+            <div class="quick-jump-hint" id="quick-jump-hint">Bấm số (1-60) hoặc OK để chuyển</div>
+        </div>
+    </div>
+
+    <!-- VIDEO PLAYER OVERLAY -->
+    <div id="video-modal">
+        <video id="video-player" autoplay playsinline preload="auto" poster="data:image/gif;base64,R0lGODlhAQABAIAAAAAAAP///yH5BAEAAAAALAAAAAABAAEAAAIBRAA7"></video>
+        <div id="player-spinner"></div>
+        <div class="player-hud-overlay" id="player-hud">
+            <span class="pulse-dot" style="background: #e50914; box-shadow: 0 0 10px #e50914;"></span>
+            <div>
+                <div style="font-size: 18px; font-weight: 800;" id="player-channel-title">Đang kết nối...</div>
+                <div style="font-size: 12px; color: var(--primary-cyan);" id="player-channel-sub">1080p FHD • Trực Tiếp</div>
+            </div>
+        </div>
+    </div>
+
+    <!-- DYNAMIC BACKGROUND -->
+    <div id="hero-backdrop"></div>
+
+    <div class="tv-screen">
+        <canvas id="bg-canvas"></canvas>
+
+        <div class="ui-layer">
+            <!-- TOP BAR -->
+            <div class="top-bar">
+                <div class="header-left">
+                    <div class="digital-clock" id="clock">13:00</div>
+                    <div class="date-badge">
+                        <div class="solar-date" id="live-date">Thứ Sáu, 23 Tháng 10</div>
+                        <div class="lunar-pill" id="live-lunar">
+                            <span class="lunar-icon">🌙</span>
+                            <span>14/09 Âm lịch (Bính Ngọ)</span>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- SMART QUICK ACTIONS -->
+                <div class="quick-actions">
+                    <div class="action-pill" data-action="googletv">
+                        <span>🔄</span>
+                        <span>Google TV gốc</span>
+                    </div>
+                    <div class="action-pill" data-action="cleanram">
+                        <span>🚀</span>
+                        <span id="ram-indicator">850 MB RAM</span>
+                    </div>
+                    <div class="action-pill" data-action="settings">
+                        <span>⚙️</span>
+                        <span>Cài đặt TV</span>
+                    </div>
+                </div>
+
+                <!-- 3D WEATHER CAPSULE -->
+                <div class="weather-capsule">
+                    <div class="weather-paper-icon">
+                        <svg viewBox="10 3 84 74">
+                            <defs>
+                                <filter id="p-sun-shadow" x="-30%" y="-30%" width="160%" height="160%">
+                                    <feDropShadow dx="0" dy="2.5" stdDeviation="2.5" flood-color="#000000" flood-opacity="0.25"/>
+                                </filter>
+                                <filter id="p-back-cloud-shadow" x="-30%" y="-30%" width="160%" height="160%">
+                                    <feDropShadow dx="0" dy="3.5" stdDeviation="3.2" flood-color="#000000" flood-opacity="0.28"/>
+                                </filter>
+                                <filter id="p-front-cloud-shadow" x="-30%" y="-30%" width="160%" height="160%">
+                                    <feDropShadow dx="0.5" dy="3.2" stdDeviation="2.5" flood-color="#051a2e" flood-opacity="0.32"/>
+                                </filter>
+                                <radialGradient id="p-sun-grad" cx="42%" cy="38%" r="60%">
+                                    <stop offset="0%" stop-color="#FFF59D" />
+                                    <stop offset="40%" stop-color="#FFCA28" />
+                                    <stop offset="80%" stop-color="#FFA000" />
+                                    <stop offset="100%" stop-color="#FF8F00" />
+                                </radialGradient>
+                                <linearGradient id="p-cloud-back" x1="0%" y1="0%" x2="0%" y2="100%">
+                                    <stop offset="0%" stop-color="#FFFFFF" />
+                                    <stop offset="65%" stop-color="#E2EBF2" />
+                                    <stop offset="100%" stop-color="#CDD9E4" />
+                                </linearGradient>
+                                <linearGradient id="p-cloud-front" x1="0%" y1="0%" x2="0%" y2="100%">
+                                    <stop offset="0%" stop-color="#FFFFFF" />
+                                    <stop offset="70%" stop-color="#FAFCFD" />
+                                    <stop offset="100%" stop-color="#E6EDF4" />
+                                </linearGradient>
+                            </defs>
+                            <g transform="translate(62, 33)" filter="url(#p-sun-shadow)">
+                                <g id="sun-rays">
+                                    <g transform="rotate(0)"><polygon points="0,-18 4.2,-23 0,-28.5" fill="#FFD54F"/><polygon points="0,-18 -4.2,-23 0,-28.5" fill="#FB8C00"/></g>
+                                    <g transform="rotate(25.7)"><polygon points="0,-18 4.2,-23 0,-28.5" fill="#FFD54F"/><polygon points="0,-18 -4.2,-23 0,-28.5" fill="#FB8C00"/></g>
+                                    <g transform="rotate(51.4)"><polygon points="0,-18 4.2,-23 0,-28.5" fill="#FFD54F"/><polygon points="0,-18 -4.2,-23 0,-28.5" fill="#FB8C00"/></g>
+                                    <g transform="rotate(77.1)"><polygon points="0,-18 4.2,-23 0,-28.5" fill="#FFD54F"/><polygon points="0,-18 -4.2,-23 0,-28.5" fill="#FB8C00"/></g>
+                                    <g transform="rotate(102.8)"><polygon points="0,-18 4.2,-23 0,-28.5" fill="#FFD54F"/><polygon points="0,-18 -4.2,-23 0,-28.5" fill="#FB8C00"/></g>
+                                    <g transform="rotate(128.5)"><polygon points="0,-18 4.2,-23 0,-28.5" fill="#FFD54F"/><polygon points="0,-18 -4.2,-23 0,-28.5" fill="#FB8C00"/></g>
+                                    <g transform="rotate(154.2)"><polygon points="0,-18 4.2,-23 0,-28.5" fill="#FFD54F"/><polygon points="0,-18 -4.2,-23 0,-28.5" fill="#FB8C00"/></g>
+                                    <g transform="rotate(180)"><polygon points="0,-18 4.2,-23 0,-28.5" fill="#FFD54F"/><polygon points="0,-18 -4.2,-23 0,-28.5" fill="#FB8C00"/></g>
+                                    <g transform="rotate(205.7)"><polygon points="0,-18 4.2,-23 0,-28.5" fill="#FFD54F"/><polygon points="0,-18 -4.2,-23 0,-28.5" fill="#FB8C00"/></g>
+                                    <g transform="rotate(231.4)"><polygon points="0,-18 4.2,-23 0,-28.5" fill="#FFD54F"/><polygon points="0,-18 -4.2,-23 0,-28.5" fill="#FB8C00"/></g>
+                                    <g transform="rotate(257.1)"><polygon points="0,-18 4.2,-23 0,-28.5" fill="#FFD54F"/><polygon points="0,-18 -4.2,-23 0,-28.5" fill="#FB8C00"/></g>
+                                    <g transform="rotate(282.8)"><polygon points="0,-18 4.2,-23 0,-28.5" fill="#FFD54F"/><polygon points="0,-18 -4.2,-23 0,-28.5" fill="#FB8C00"/></g>
+                                    <g transform="rotate(308.5)"><polygon points="0,-18 4.2,-23 0,-28.5" fill="#FFD54F"/><polygon points="0,-18 -4.2,-23 0,-28.5" fill="#FB8C00"/></g>
+                                    <g transform="rotate(334.2)"><polygon points="0,-18 4.2,-23 0,-28.5" fill="#FFD54F"/><polygon points="0,-18 -4.2,-23 0,-28.5" fill="#FB8C00"/></g>
+                                </g>
+                                <circle cx="0" cy="0" r="19.5" fill="url(#p-sun-grad)"/>
+                            </g>
+                            <g filter="url(#p-back-cloud-shadow)">
+                                <path d="M 38,65 A 10 10 0 0 1 45,48 A 14 14 0 0 1 65,47 A 12 12 0 0 1 78,57 A 9 9 0 0 1 82,66 A 7 7 0 0 1 76,73 L 42,73 A 6 6 0 0 1 38,65 Z" fill="url(#p-cloud-back)"/>
+                            </g>
+                            <g filter="url(#p-front-cloud-shadow)">
+                                <path d="M 23,63 A 12 12 0 0 1 24,49 A 16 16 0 0 1 48,43 A 14 14 0 0 1 66,51 A 10 10 0 0 1 72,61 A 8 8 0 0 1 68,71 A 8 8 0 0 1 54,71 A 10 10 0 0 1 36,71 A 8 8 0 0 1 23,63 Z" fill="url(#p-cloud-front)"/>
+                            </g>
+                        </svg>
+                    </div>
+                    <div>
+                        <div style="display: flex; align-items: baseline; gap: 6px;">
+                            <span style="font-size: 18px; font-weight: 700; color: #ffffff;">29°C</span>
+                            <span style="font-size: 10px; font-weight: 600; color: #8ec5fc;">Nắng Nhẹ</span>
+                        </div>
+                        <div style="font-size: 9.5px; color: rgba(255, 255, 255, 0.6); display: flex; gap: 4px;">
+                            <span>TP. HCM</span>
+                            <span>•</span>
+                            <span>AQI: <b style="color: #00ff88;">32</b></span>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- CINEMATIC HERO SPOTLIGHT -->
+            <div class="hero-spotlight">
+                <div class="hero-category-tag" id="spotlight-tag">VTV QUỐC GIA</div>
+                <div class="hero-title" id="spotlight-title">#01 VTV1 HD</div>
+                <div class="hero-desc" id="spotlight-desc">
+                    Kênh Thời sự - Chính luận - Tổng hợp Quốc gia. Phát sóng bản tin Thời sự 19h, Chuyển động 24h và các sự kiện chính trị xã hội quan trọng.
+                </div>
+            </div>
+
+            <!-- SECTION 1: IPTV CHANNELS (82 KÊNH CHỌN LỌC) -->
+            <div class="section-iptv">
+                <div class="section-header-iptv">
+                    <div style="display: flex; align-items: center; gap: 8px; white-space: nowrap;">
+                        <span class="section-title">Kênh Truyền Hình</span>
+                    </div>
+
+                    <!-- DANH MỤC THỂ LOẠI -->
+                    <div class="tabs-row">
+                        <div class="tab-chip active" data-filter="all">Tất Cả (60)</div>
+                        <div class="tab-chip" data-filter="vtv">Kênh VTV</div>
+                        <div class="tab-chip" data-filter="htv">Kênh HTV</div>
+                        <div class="tab-chip" data-filter="news">An Ninh & Tin Tức</div>
+                        <div class="tab-chip" data-filter="cable">Cáp SCTV & Phim</div>
+                        <div class="tab-chip" data-filter="local">Đài Địa Phương</div>
+                    </div>
+                </div>
+
+                <div class="channel-stream-row" id="channel-row">
+                    <!-- DYNAMICALLY POPULATED WITH ALL 82 CHANNELS -->
+                </div>
+            </div>
+
+            <!-- SECTION 2: SMART APPS DOCK (ỨNG DỤNG CỦA BẠN) -->
+            <div class="section-apps">
+                <div class="section-title">Ứng Dụng Của Bạn</div>
+                <div class="apps-scroll-row" id="apps-row">
+                    <div class="app-card" data-pkg="com.xiaomi.mitv.tvmanager" data-title="Quản lý TV" data-desc="Tối ưu hóa RAM, dọn dẹp bộ nhớ đệm và tăng tốc hệ thống TV.">
+                        <div class="app-card-icon" style="background: linear-gradient(135deg, #00b09b, #96c93d); color: white;">🚀</div>
+                        <span class="app-card-label">Quản lý TV</span>
+                    </div>
+
+                    <div class="app-card" data-pkg="io.gh.reisxd.tizentube.cobalt" data-title="TizenTube" data-desc="Xem YouTube không quảng cáo, mở rộng tính năng tài khoản cao cấp và chất lượng 4K HDR.">
+                        <div class="app-card-icon" style="background: linear-gradient(135deg, #00f2fe, #4facfe); color: white;">▶️</div>
+                        <span class="app-card-label">TizenTube</span>
+                    </div>
+
+                    <div class="app-card" data-pkg="com.netflix.ninja" data-title="Netflix" data-desc="Kho phim điện ảnh, bom tấn Hollywood và series truyền hình độc quyền chuẩn 4K Dolby Vision.">
+                        <div class="app-card-icon" style="background: #000000; color: #e50914; font-weight: 900; font-size: 13px;">NETFLIX</div>
+                        <span class="app-card-label">Netflix</span>
+                    </div>
+
+                    <div class="app-card" data-pkg="com.chophim.tv" data-title="Cho Phim TV" data-desc="Kho phim trực tuyến phong phú, cập nhật phim bộ và phim chiếu rạp mới nhất.">
+                        <div class="app-card-icon" style="background: linear-gradient(135deg, #f6d365, #fda085); color: #333;">🍿</div>
+                        <span class="app-card-label">Cho Phim TV</span>
+                    </div>
+
+                    <div class="app-card" data-pkg="com.tcl.browser" data-title="BrowseHere Trình duyệt web" data-desc="Trình duyệt web tốc độ cao chuyên dụng cho Android TV, chặn quảng cáo và lướt web mượt mà.">
+                        <div class="app-card-icon" style="background: linear-gradient(135deg, #2193b0, #6dd5ed); color: white;">🌐</div>
+                        <span class="app-card-label">BrowseHere</span>
+                    </div>
+
+                    <div class="app-card" data-pkg="com.softmedia.receiver" data-title="AirReceiver" data-desc="Thu phát sóng không dây AirPlay, DLNA và UPnP từ iPhone, iPad, Mac và Android lên TV.">
+                        <div class="app-card-icon" style="background: linear-gradient(135deg, #74b9ff, #0984e3); color: white;">📲</div>
+                        <span class="app-card-label">AirReceiver</span>
+                    </div>
+
+                    <div class="app-card" data-pkg="com.mitv.gallery" data-title="Thư viện" data-desc="Xem bộ sưu tập ảnh và video lưu trữ trên bộ nhớ TV hoặc cắm từ USB.">
+                        <div class="app-card-icon" style="background: linear-gradient(135deg, #f0932b, #ffbe76); color: white;">🖼️</div>
+                        <span class="app-card-label">Thư viện</span>
+                    </div>
+
+                    <div class="app-card" data-pkg="com.xiaomi.mitv.smartshare" data-title="Miracast" data-desc="Chiếu không dây màn hình điện thoại Xiaomi & thiết bị Android lên TV tức thì.">
+                        <div class="app-card-icon" style="background: linear-gradient(135deg, #00b894, #55efc4); color: white;">📡</div>
+                        <span class="app-card-label">Miracast</span>
+                    </div>
+
+                    <div class="app-card" data-pkg="com.mitv.livetv" data-title="Live TV" data-desc="Kênh truyền hình trực tiếp tích hợp mặc định trên tivi Xiaomi.">
+                        <div class="app-card-icon" style="background: linear-gradient(135deg, #0984e3, #74b9ff); color: white;">📺</div>
+                        <span class="app-card-label">Live TV</span>
+                    </div>
+
+                    <div class="app-card" data-pkg="com.xiaomi.mitv.mediaexplorer" data-title="Media Player" data-desc="Trình phát đa phương tiện, phát video 4K, duyệt tập tin ổ cứng và USB tốc độ cao.">
+                        <div class="app-card-icon" style="background: linear-gradient(135deg, #4834d4, #686de0); color: white;">📁</div>
+                        <span class="app-card-label">Media Player</span>
+                    </div>
+
+                    <div class="app-card" data-pkg="com.google.android.youtube.tv" data-title="YouTube" data-desc="Ứng dụng YouTube chính thức từ Google dành riêng cho màn hình Smart TV.">
+                        <div class="app-card-icon" style="background: #ffffff; color: #ff0000; font-size: 20px;">▶</div>
+                        <span class="app-card-label">YouTube</span>
+                    </div>
+
+                    <div class="app-card" data-pkg="com.amazon.amazonvideo.livingroom" data-title="Prime Video" data-desc="Dịch vụ phim và chương trình truyền hình trực tuyến Amazon Originals chất lượng cao.">
+                        <div class="app-card-icon" style="background: linear-gradient(135deg, #00a8e1, #002b49); color: white; font-weight: 900; font-size: 11px;">PRIME</div>
+                        <span class="app-card-label">Prime Video</span>
+                    </div>
+
+                    <div class="app-card" data-pkg="settings" data-title="Cài đặt" data-desc="Tùy chỉnh mạng Wi-Fi, kết nối Bluetooth, chế độ hình ảnh và âm thanh của TV.">
+                        <div class="app-card-icon" style="background: linear-gradient(135deg, #636e72, #2d3436); color: white;">⚙️</div>
+                        <span class="app-card-label">Cài đặt</span>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        // VIETNAMESE LUNAR CALENDAR ALGORITHM (Hồ Ngọc Đức Astronomical Engine)
+        function getLunarDate(solarDay, solarMonth, solarYear) {
+            const tz = 7.0; // Vietnam UTC+7
+            function jdFromDate(d, m, y) {
+                let a = Math.floor((14 - m) / 12);
+                let y2 = y + 4800 - a;
+                let m2 = m + 12 * a - 3;
+                let jd = d + Math.floor((153 * m2 + 2) / 5) + 365 * y2 + Math.floor(y2 / 4) - Math.floor(y2 / 100) + Math.floor(y2 / 400) - 32045;
+                if (jd < 2299161) {
+                    jd = d + Math.floor((153 * m2 + 2) / 5) + 365 * y2 + Math.floor(y2 / 4) - 32083;
+                }
+                return jd;
+            }
+
+            function getNewMoonDay(k, timeZone) {
+                let T = k / 1236.85;
+                let T2 = T * T;
+                let T3 = T2 * T;
+                let dr = Math.PI / 180.0;
+                let Jd1 = 2415020.75933 + 29.53058868 * k + 0.01178 * T2 - 0.000000155 * T3;
+                Jd1 += 0.00033 * Math.sin((166.56 + 132.87 * T - 0.009173 * T2) * dr);
+                let M = 359.2242 + 29.10535608 * k - 0.0000333 * T2 - 0.00000347 * T3;
+                let Mpr = 306.0253 + 385.81691806 * k + 0.0107306 * T2 + 0.00001236 * T3;
+                let F = 21.2964 + 390.67050646 * k - 0.0016528 * T2 - 0.00000239 * T3;
+                let C1 = (0.1734 - 0.000393 * T) * Math.sin(M * dr) + 0.0021 * Math.sin(2 * M * dr);
+                C1 = C1 - 0.4068 * Math.sin(Mpr * dr) + 0.0161 * Math.sin(2 * Mpr * dr);
+                C1 = C1 - 0.0004 * Math.sin(3 * Mpr * dr);
+                C1 = C1 + 0.0104 * Math.sin(2 * F * dr) - 0.0051 * Math.sin((M + Mpr) * dr);
+                C1 = C1 - 0.0074 * Math.sin((M - Mpr) * dr) + 0.0004 * Math.sin((2 * F + M) * dr);
+                C1 = C1 - 0.0004 * Math.sin((2 * F - M) * dr) - 0.0006 * Math.sin((2 * F + Mpr) * dr);
+                C1 = C1 + 0.0100 * Math.sin((2 * F - Mpr) * dr) + 0.0005 * Math.sin((2 * Mpr + M) * dr);
+                let deltat = (T < -11) ? 
+                    (0.001 + 0.000839 * T + 0.0002261 * T2 - 0.00000845 * T3 - 0.000000081 * T * T3) :
+                    (-0.0000278 + 0.000265 * T + 0.000262 * T2);
+                let JdNew = Jd1 + C1 - deltat;
+                return Math.floor(JdNew + 0.5 + timeZone / 24.0);
+            }
+
+            function getSunLongitude(jdn, timeZone) {
+                let T = (jdn - 2451545.5 - timeZone / 24.0) / 36525.0;
+                let T2 = T * T;
+                let dr = Math.PI / 180.0;
+                let M = 357.52910 + 35999.05030 * T - 0.0001559 * T2 - 0.00000048 * T * T2;
+                let L0 = 280.46645 + 36000.76983 * T + 0.0003032 * T2;
+                let DL = (1.914600 - 0.004817 * T - 0.000014 * T2) * Math.sin(M * dr);
+                DL += (0.019993 - 0.000101 * T) * Math.sin(2 * M * dr) + 0.000290 * Math.sin(3 * M * dr);
+                let L = (L0 + DL) * dr;
+                L = L - Math.PI * 2 * Math.floor(L / (Math.PI * 2));
+                return Math.floor(L / (Math.PI / 6));
+            }
+
+            function getLunarMonth11(yy, timeZone) {
+                let off = jdFromDate(31, 12, yy) - 2415021;
+                let k = Math.floor(off / 29.530588853);
+                let nm = getNewMoonDay(k, timeZone);
+                let sunLong = getSunLongitude(nm, timeZone);
+                if (sunLong >= 9) {
+                    nm = getNewMoonDay(k - 1, timeZone);
+                }
+                return nm;
+            }
+
+            function getLeapMonthOffset(a11, timeZone) {
+                let k = Math.floor((a11 - 2415021.076998695) / 29.530588853 + 0.5);
+                let last = 0;
+                let i = 1;
+                let arc = getSunLongitude(getNewMoonDay(k + i, timeZone), timeZone);
+                while (arc !== last && i < 14) {
+                    last = arc;
+                    i++;
+                    arc = getSunLongitude(getNewMoonDay(k + i, timeZone), timeZone);
+                }
+                return i - 1;
+            }
+
+            const CAN = ["Giáp", "Ất", "Bính", "Đinh", "Mậu", "Kỷ", "Canh", "Tân", "Nhâm", "Quý"];
+            const CHI = ["Tý", "Sửu", "Dần", "Mão", "Thìn", "Tỵ", "Ngọ", "Mùi", "Thân", "Dậu", "Tuất", "Hợi"];
+
+            let dayNumber = jdFromDate(solarDay, solarMonth, solarYear);
+            let k = Math.floor((dayNumber - 2415021.076998695) / 29.530588853);
+            let monthStart = getNewMoonDay(k + 1, tz);
+            if (monthStart > dayNumber) {
+                monthStart = getNewMoonDay(k, tz);
+            }
+            let a11 = getLunarMonth11(solarYear, tz);
+            let b11 = a11;
+            let lunarYear;
+            if (a11 >= monthStart) {
+                lunarYear = solarYear;
+                a11 = getLunarMonth11(solarYear - 1, tz);
+            } else {
+                lunarYear = solarYear + 1;
+                b11 = getLunarMonth11(solarYear + 1, tz);
+            }
+            let lunarDay = dayNumber - monthStart + 1;
+            let diff = Math.floor((monthStart - a11) / 29.0);
+            let lunarLeap = 0;
+            let lunarMonth = diff + 11;
+            if (b11 - a11 > 365) {
+                let leapMonthDiff = getLeapMonthOffset(a11, tz);
+                if (diff >= leapMonthDiff) {
+                    lunarMonth = diff + 10;
+                    if (diff === leapMonthDiff) {
+                        lunarLeap = 1;
+                    }
+                }
+            }
+            if (lunarMonth > 12) {
+                lunarMonth = lunarMonth - 12;
+            }
+            if (lunarMonth >= 11 && diff < 4) {
+                lunarYear -= 1;
+            }
+
+            let yearCanChi = `${CAN[(lunarYear + 6) % 10]} ${CHI[(lunarYear + 8) % 12]}`;
+            return {
+                day: lunarDay,
+                month: lunarMonth,
+                year: lunarYear,
+                isLeap: lunarLeap === 1,
+                yearCanChi: yearCanChi
+            };
+        }
+
+        // Clock & Greeting
+        function updateClockAndGreeting() {
+            const now = new Date();
+            const h = now.getHours();
+            const hStr = String(h).padStart(2, '0');
+            const mStr = String(now.getMinutes()).padStart(2, '0');
+            document.getElementById('clock').innerText = `${hStr}:${mStr}`;
+
+            const days = ['Chủ Nhật', 'Thứ Hai', 'Thứ Ba', 'Thứ Tư', 'Thứ Năm', 'Thứ Sáu', 'Thứ Bảy'];
+            const dayName = days[now.getDay()];
+            const sDay = now.getDate();
+            const sMonth = now.getMonth() + 1;
+            const sYear = now.getFullYear();
+
+            const dateStr = `${dayName}, ${sDay} Tháng ${sMonth}`;
+            const dateEl = document.getElementById('live-date');
+            if (dateEl) dateEl.innerText = dateStr;
+
+            const lunarEl = document.getElementById('live-lunar');
+            if (lunarEl) {
+                try {
+                    const l = getLunarDate(sDay, sMonth, sYear);
+                    const lStr = `${String(l.day).padStart(2, '0')}/${String(l.month).padStart(2, '0')}${l.isLeap ? ' Nhuận' : ''} Âm lịch (${l.yearCanChi})`;
+                    lunarEl.innerHTML = `<span class="lunar-icon">🌙</span><span>${lStr}</span>`;
+                } catch (e) {
+                    console.error("Lunar date error", e);
+                }
+            }
+        }
+        setInterval(updateClockAndGreeting, 1000);
+        updateClockAndGreeting();
+
+        // Particles
+        const canvas = document.getElementById('bg-canvas');
+        const ctx = canvas.getContext('2d');
+        let w = canvas.width = window.innerWidth;
+        let h = canvas.height = window.innerHeight;
+
+        const particles = [];
+        for (let i = 0; i < 28; i++) {
+            particles.push({
+                x: Math.random() * w,
+                y: Math.random() * h,
+                size: Math.random() * 2 + 0.8,
+                speedX: (Math.random() - 0.4) * 0.35,
+                speedY: (Math.random() - 0.6) * 0.25,
+                alpha: Math.random() * 0.5 + 0.15
+            });
+        }
+
+        function renderCanvas() {
+            ctx.clearRect(0, 0, w, h);
+            for (let p of particles) {
+                p.x += p.speedX;
+                p.y += p.speedY;
+                if (p.x < 0) p.x = w;
+                if (p.x > w) p.x = 0;
+                if (p.y < 0) p.y = h;
+                if (p.y > h) p.y = 0;
+
+                ctx.beginPath();
+                ctx.arc(p.x, p.y, p.size, 0, Math.PI * 2);
+                ctx.fillStyle = `rgba(0, 242, 254, ${p.alpha})`;
+                ctx.shadowBlur = 10;
+                ctx.shadowColor = '#00f2fe';
+                ctx.fill();
+            }
+            requestAnimationFrame(renderCanvas);
+        }
+        renderCanvas();
+
+        // RAM Indicator
+        function refreshRAM() {
+            if (window.AndroidBridge && window.AndroidBridge.getRamInfo) {
+                try {
+                    const info = JSON.parse(window.AndroidBridge.getRamInfo());
+                    document.getElementById('ram-indicator').innerText = info.availMb + ' MB RAM';
+                } catch (e) {}
+            }
+        }
+        refreshRAM();
+
+        // SYNCHRONOUS RENDERING OF ALL 88 CHANNELS FROM CHANNELS.JS
+        const channelRow = document.getElementById('channel-row');
+
+        const fallbackThumbnails = [
+            "https://images.unsplash.com/photo-1585829365295-ab7cd400c167?w=600&auto=format&fit=crop&q=80",
+            "https://images.unsplash.com/photo-1514306191717-452ec28c7814?w=600&auto=format&fit=crop&q=80",
+            "https://images.unsplash.com/photo-1507679799987-c73779587ccf?w=600&auto=format&fit=crop&q=80",
+            "https://images.unsplash.com/photo-1509198397868-475647b2a1e5?w=600&auto=format&fit=crop&q=80",
+            "https://images.unsplash.com/photo-1478760329108-5c3ed9d495a0?w=600&auto=format&fit=crop&q=80",
+            "https://images.unsplash.com/photo-1528127269322-539801943592?w=600&auto=format&fit=crop&q=80",
+            "https://images.unsplash.com/photo-1541872703-74c5e44368f9?w=600&auto=format&fit=crop&q=80",
+            "https://images.unsplash.com/photo-1534447677768-be436bb09401?w=600&auto=format&fit=crop&q=80"
+        ];
+
+        function renderChannels(channelsList) {
+            channelRow.innerHTML = '';
+            channelsList.forEach((ch, idx) => {
+                const tile = document.createElement('div');
+                tile.className = 'channel-tile' + (idx === 0 ? ' focused' : '');
+                tile.setAttribute('data-category', ch.cat);
+                tile.setAttribute('data-url', ch.url);
+                tile.setAttribute('data-title', ch.name);
+                tile.setAttribute('data-num', ch.num);
+                tile.setAttribute('data-cat-label', ch.catLabel);
+                tile.setAttribute('data-desc', ch.desc || '');
+
+                const thumb = fallbackThumbnails[idx % fallbackThumbnails.length];
+                const logoHtml = ch.logo ? `<img src="${ch.logo}" onerror="this.parentElement.innerText='${ch.name.slice(0,4)}'">` : ch.name.slice(0,4);
+
+                tile.innerHTML = `
+                    <img class="tile-stream-bg" src="${thumb}">
+                    <div class="tile-glass-overlay"></div>
+                    <div class="tile-top-tag">
+                        <div class="tile-logo-box">${logoHtml}</div>
+                        <span class="channel-num-badge">#${String(ch.num).padStart(2, '0')}</span>
+                        <span class="resolution-badge">1080p</span>
+                    </div>
+                    <div class="tile-info">
+                        <div class="tile-channel-title">${ch.name}</div>
+                        <div class="tile-channel-desc">${ch.catLabel} • Trực tiếp</div>
+                    </div>
+                `;
+
+                tile.addEventListener('click', () => {
+                    activeRow = 2;
+                    const visible = getVisibleChannels();
+                    colIndex = visible.indexOf(tile);
+                    refreshFocus();
+                    activateCurrent();
+                });
+
+                channelRow.appendChild(tile);
+            });
+        }
+
+        // Render immediately using ALL_CHANNELS from channels.js
+        if (typeof ALL_CHANNELS !== 'undefined' && Array.isArray(ALL_CHANNELS)) {
+            renderChannels(ALL_CHANNELS);
+        }
+
+        // Dynamic Spotlight
+        const spotlightTitle = document.getElementById('spotlight-title');
+        const spotlightDesc = document.getElementById('spotlight-desc');
+        const spotlightTag = document.getElementById('spotlight-tag');
+        const spotlightCount = document.getElementById('spotlight-count');
+        const ctaLabel = document.getElementById('cta-label');
+        const heroBackdrop = document.getElementById('hero-backdrop');
+
+        function updateSpotlight(title, desc, tag, cta, bg) {
+            spotlightTitle.innerText = title;
+            spotlightDesc.innerText = desc || 'Luồng phát trực tiếp tốc độ cao.';
+            if (spotlightTag) spotlightTag.innerText = tag || 'TRỰC TIẾP';
+            if (ctaLabel) ctaLabel.innerText = cta || '';
+            if (bg) {
+                heroBackdrop.style.backgroundImage = `url('${bg}')`;
+                heroBackdrop.style.opacity = '0.35';
+            }
+        }
+
+        // Fast HLS Video Player Engine
+        let hlsInstance = null;
+        const videoModal = document.getElementById('video-modal');
+        const videoPlayer = document.getElementById('video-player');
+        const playerChannelTitle = document.getElementById('player-channel-title');
+        const playerSpinner = document.getElementById('player-spinner');
+        const playerHud = document.getElementById('player-hud');
+        let hudTimeout = null;
+        let currentPlayingIndex = 0;
+
+        function showPlayerHud() {
+            playerHud.style.opacity = '1';
+            clearTimeout(hudTimeout);
+            hudTimeout = setTimeout(() => {
+                playerHud.style.opacity = '0';
+            }, 3000);
+        }
+
+        function playLiveChannelByIndex(index) {
+            const visible = getVisibleChannels();
+            if (visible.length === 0) return;
+            if (index < 0) index = visible.length - 1;
+            if (index >= visible.length) index = 0;
+            currentPlayingIndex = index;
+
+            const target = visible[index];
+            if (!target) return;
+
+            const url = target.getAttribute('data-url');
+            const title = target.getAttribute('data-title');
+            const num = target.getAttribute('data-num');
+            playLiveChannel(url, `#${num} ${title}`);
+        }
+
+        function playLiveChannel(url, title) {
+            playerChannelTitle.innerText = title;
+            videoPlayer.classList.remove('ready');
+            videoModal.classList.add('active');
+            playerSpinner.style.display = 'block';
+            showPlayerHud();
+
+            if (Hls.isSupported()) {
+                if (hlsInstance) {
+                    hlsInstance.destroy();
+                    hlsInstance = null;
+                }
+
+                // Reset video element smoothly without calling videoPlayer.load()
+                videoPlayer.pause();
+                videoPlayer.removeAttribute('src');
+
+                // Low-latency Fast-Start HLS Engine (Matched to DriveTV 1s forward buffer)
+                hlsInstance = new Hls({
+                    enableWorker: true,
+                    lowLatencyMode: true,
+                    capLevelToPlayerSize: true,
+                    startLevel: -1,
+                    maxBufferLength: 4,
+                    maxMaxBufferLength: 8,
+                    maxBufferSize: 25 * 1024 * 1024,
+                    liveSyncDurationCount: 1,
+                    liveMaxLatencyDurationCount: 3,
+                    backBufferLength: 1,
+                    manifestLoadingTimeOut: 2500,
+                    manifestLoadingMaxRetry: 2,
+                    fragLoadingTimeOut: 3000,
+                    fragLoadingMaxRetry: 2,
+                    levelLoadingTimeOut: 2500,
+                    progressive: true,
+                    autoStartLoad: true
+                });
+
+                hlsInstance.loadSource(url);
+                hlsInstance.attachMedia(videoPlayer);
+
+                hlsInstance.on(Hls.Events.MANIFEST_PARSED, () => {
+                    videoPlayer.play().catch(e => console.log('Autoplay:', e));
+                });
+
+                const revealVideo = () => {
+                    videoPlayer.classList.add('ready');
+                    playerSpinner.style.display = 'none';
+                };
+
+                hlsInstance.on(Hls.Events.FRAG_BUFFERED, revealVideo);
+                videoPlayer.onplaying = revealVideo;
+                videoPlayer.onloadeddata = revealVideo;
+                videoPlayer.oncanplay = revealVideo;
+                videoPlayer.ontimeupdate = () => {
+                    if (videoPlayer.currentTime > 0.05) revealVideo();
+                };
+
+                videoPlayer.onwaiting = () => {
+                    playerSpinner.style.display = 'block';
+                };
+
+                hlsInstance.on(Hls.Events.ERROR, (event, data) => {
+                    if (data.fatal) {
+                        switch (data.type) {
+                            case Hls.ErrorTypes.NETWORK_ERROR:
+                                hlsInstance.startLoad();
+                                break;
+                            case Hls.ErrorTypes.MEDIA_ERROR:
+                                hlsInstance.recoverMediaError();
+                                break;
+                            default:
+                                playerSpinner.style.display = 'none';
+                                setTimeout(() => {
+                                    if (hlsInstance) hlsInstance.loadSource(url);
+                                }, 1200);
+                                break;
+                        }
+                    }
+                });
+            } else if (videoPlayer.canPlayType('application/vnd.apple.mpegurl')) {
+                videoPlayer.src = url;
+                videoPlayer.play().catch(e => console.log('Autoplay:', e));
+                videoPlayer.onplaying = () => {
+                    videoPlayer.classList.add('ready');
+                    playerSpinner.style.display = 'none';
+                };
+            }
+        }
+
+        function closeVideoPlayer() {
+            if (videoModal.classList.contains('active')) {
+                videoModal.classList.remove('active');
+                if (hlsInstance) {
+                    hlsInstance.destroy();
+                    hlsInstance = null;
+                }
+                videoPlayer.pause();
+                videoPlayer.src = '';
+                playerSpinner.style.display = 'none';
+                return true;
+            }
+            return false;
+        }
+
+        function onBackPress() {
+            if (numBuffer.length > 0) {
+                clearTimeout(numTimer);
+                numTimer = null;
+                numBuffer = '';
+                jumpOverlay.classList.remove('visible', 'error', 'success');
+                return true;
+            }
+            return closeVideoPlayer();
+        }
+
+        // Category Filter Tabs
+        const tabChips = Array.from(document.querySelectorAll('.tab-chip'));
+        let currentFilter = 'all';
+
+        function applyFilter(filter) {
+            currentFilter = filter;
+            tabChips.forEach(chip => {
+                if (chip.getAttribute('data-filter') === filter) {
+                    chip.classList.add('active');
+                } else {
+                    chip.classList.remove('active');
+                }
+            });
+
+            const allTiles = Array.from(document.querySelectorAll('.channel-tile'));
+            allTiles.forEach(tile => {
+                const cat = tile.getAttribute('data-category');
+                if (filter === 'all' || cat === filter || (filter === 'cable' && cat === 'ent')) {
+                    tile.style.display = 'flex';
+                } else {
+                    tile.style.display = 'none';
+                }
+            });
+            colIndex = 0;
+            activeRow = 2;
+            refreshFocus();
+        }
+
+        tabChips.forEach(chip => {
+            chip.addEventListener('click', () => {
+                applyFilter(chip.getAttribute('data-filter'));
+            });
+        });
+
+        // REMOTE SPATIAL NAVIGATION SYSTEM
+        // Row 0: Action Pills
+        // Row 1: Category Filter Tabs
+        // Row 2: Channels Row (88 Channels)
+        // Row 3: Apps Row
+        let activeRow = 2; // Default focus directly on channels!
+        let colIndex = 0;
+
+        const actionPills = Array.from(document.querySelectorAll('.action-pill'));
+        const apps = Array.from(document.querySelectorAll('.app-card'));
+
+        function getVisibleChannels() {
+            return Array.from(document.querySelectorAll('.channel-tile')).filter(el => el.style.display !== 'none');
+        }
+
+        function refreshFocus() {
+            document.querySelectorAll('.focused').forEach(el => el.classList.remove('focused'));
+
+            if (activeRow === 0) {
+                colIndex = Math.max(0, Math.min(colIndex, actionPills.length - 1));
+                const target = actionPills[colIndex];
+                if (target) {
+                    target.classList.add('focused');
+                    updateSpotlight(
+                        target.innerText.trim(),
+                        'Bấm phím OK để kích hoạt tiện ích hệ thống ngay lập tức.',
+                        'HỆ THỐNG • TÙY CHỌN',
+                        'KÍCH HOẠT [OK]',
+                        null
+                    );
+                }
+            } else if (activeRow === 1) {
+                colIndex = Math.max(0, Math.min(colIndex, tabChips.length - 1));
+                const target = tabChips[colIndex];
+                if (target) {
+                    target.classList.add('focused');
+                    target.scrollIntoView({ behavior: 'smooth', inline: 'center', block: 'nearest' });
+                    updateSpotlight(
+                        target.innerText.trim(),
+                        'Lọc danh sách các kênh truyền hình theo thể loại này.',
+                        'BỘ LỌC THỂ LOẠI',
+                        'CHỌN [OK]',
+                        null
+                    );
+                }
+            } else if (activeRow === 2) {
+                const visible = getVisibleChannels();
+                if (visible.length === 0) return;
+                colIndex = Math.max(0, Math.min(colIndex, visible.length - 1));
+                const target = visible[colIndex];
+                if (target) {
+                    target.classList.add('focused');
+                    target.scrollIntoView({ behavior: 'smooth', inline: 'center', block: 'nearest' });
+
+                    const title = target.getAttribute('data-title');
+                    const num = target.getAttribute('data-num');
+                    const catLabel = target.getAttribute('data-cat-label');
+                    const desc = target.getAttribute('data-desc');
+                    const bg = target.querySelector('.tile-stream-bg') ? target.querySelector('.tile-stream-bg').src : null;
+
+                    updateSpotlight(
+                        `#${String(num).padStart(2, '0')} ${title}`,
+                        desc || `Kênh ${title} thuộc nhóm ${catLabel}. Phát sóng trực tiếp chất lượng cao 1080p FHD.`,
+                        catLabel.toUpperCase(),
+                        'XEM TOÀN MÀN HÌNH [OK]',
+                        bg
+                    );
+                }
+            } else if (activeRow === 3) {
+                colIndex = Math.max(0, Math.min(colIndex, apps.length - 1));
+                const target = apps[colIndex];
+                if (target) {
+                    target.classList.add('focused');
+                    target.scrollIntoView({ behavior: 'smooth', inline: 'center', block: 'nearest' });
+
+                    updateSpotlight(
+                        target.getAttribute('data-title'),
+                        target.getAttribute('data-desc'),
+                        'ỨNG DỤNG CỦA BẠN',
+                        'MỞ ỨNG DỤNG [OK]',
+                        null
+                    );
+                }
+            }
+        }
+
+        function activateCurrent() {
+            if (videoModal.classList.contains('active')) {
+                closeVideoPlayer();
+                return;
+            }
+
+            if (activeRow === 0) {
+                const target = actionPills[colIndex];
+                if (!target) return;
+                const act = target.getAttribute('data-action');
+                if (act === 'googletv') {
+                    if (window.AndroidBridge && window.AndroidBridge.openGoogleTV) {
+                        window.AndroidBridge.openGoogleTV();
+                    }
+                } else if (act === 'cleanram') {
+                    if (window.AndroidBridge && window.AndroidBridge.cleanRAM) {
+                        window.AndroidBridge.cleanRAM();
+                        setTimeout(refreshRAM, 500);
+                    }
+                } else if (act === 'settings') {
+                    if (window.AndroidBridge && window.AndroidBridge.openSettings) {
+                        window.AndroidBridge.openSettings();
+                    }
+                }
+            } else if (activeRow === 1) {
+                const target = tabChips[colIndex];
+                if (target) applyFilter(target.getAttribute('data-filter'));
+            } else if (activeRow === 2) {
+                const visible = getVisibleChannels();
+                const target = visible[colIndex];
+                if (target) {
+                    currentPlayingIndex = colIndex;
+                    const url = target.getAttribute('data-url');
+                    const title = target.getAttribute('data-title');
+                    const num = target.getAttribute('data-num');
+                    playLiveChannel(url, `#${num} ${title}`);
+                }
+            } else if (activeRow === 3) {
+                const target = apps[colIndex];
+                if (target) {
+                    const pkg = target.getAttribute('data-pkg');
+                    if (window.AndroidBridge) {
+                        window.AndroidBridge.launchApp(pkg);
+                    }
+                }
+            }
+        }
+
+        // NUMERIC REMOTE CHANNEL SELECTION SYSTEM (#1 to #60)
+        let numBuffer = '';
+        let numTimer = null;
+        let jumpOsdTimeout = null;
+        let lastDigitTime = 0;
+        let lastDigitVal = -1;
+
+        const jumpOverlay = document.getElementById('channel-quick-jump');
+        const jumpNumEl = document.getElementById('quick-jump-num');
+        const jumpNameEl = document.getElementById('quick-jump-name');
+        const jumpHintEl = document.getElementById('quick-jump-hint');
+
+        function handleNumericInput(digit) {
+            const now = Date.now();
+            // Triệt tiêu xung đột đa kênh (debounce duplicate key events trong vòng 100ms)
+            if (now - lastDigitTime < 100 && lastDigitVal === digit) {
+                console.log('Debounced duplicate digit:', digit);
+                return;
+            }
+            lastDigitTime = now;
+            lastDigitVal = digit;
+
+            if (numBuffer.length >= 2) {
+                numBuffer = '';
+            }
+            numBuffer += String(digit);
+            const parsedNum = parseInt(numBuffer, 10);
+            console.log('handleNumericInput digit=' + digit + ' -> numBuffer=' + numBuffer);
+
+            // Find in ALL_CHANNELS
+            const matched = (typeof ALL_CHANNELS !== 'undefined' && Array.isArray(ALL_CHANNELS))
+                ? ALL_CHANNELS.find(c => c.num === parsedNum)
+                : null;
+
+            jumpOverlay.classList.remove('error', 'success');
+            jumpNumEl.innerText = String(parsedNum).padStart(2, '0');
+
+            if (matched) {
+                jumpNameEl.innerText = matched.name;
+                jumpHintEl.innerText = `Chuyển kênh sau 2s hoặc bấm OK`;
+            } else if (parsedNum > 60 || parsedNum === 0) {
+                jumpOverlay.classList.add('error');
+                jumpNameEl.innerText = 'Kênh không tồn tại';
+                jumpHintEl.innerText = 'Vui lòng chọn kênh từ 1 đến 60';
+            } else {
+                jumpNameEl.innerText = `Tìm kiếm kênh #${parsedNum}...`;
+                jumpHintEl.innerText = 'Bấm thêm số hoặc OK để chuyển';
+            }
+
+            jumpOverlay.classList.add('visible');
+            clearTimeout(numTimer);
+            clearTimeout(jumpOsdTimeout);
+
+            numTimer = setTimeout(() => {
+                executeChannelJump();
+            }, 2000);
+        }
+
+        function executeChannelJump() {
+            clearTimeout(numTimer);
+            numTimer = null;
+            if (!numBuffer) return;
+
+            const targetNum = parseInt(numBuffer, 10);
+            console.log('executeChannelJump targetNum=' + targetNum);
+            numBuffer = '';
+
+            const matched = (typeof ALL_CHANNELS !== 'undefined' && Array.isArray(ALL_CHANNELS))
+                ? ALL_CHANNELS.find(c => c.num === targetNum)
+                : null;
+
+            if (!matched) {
+                jumpOverlay.classList.remove('success');
+                jumpOverlay.classList.add('error');
+                jumpNumEl.innerText = String(targetNum).padStart(2, '0');
+                jumpNameEl.innerText = 'Kênh không tồn tại (1-60)';
+                jumpHintEl.innerText = 'Đã hủy lệnh chuyển kênh';
+                clearTimeout(jumpOsdTimeout);
+                jumpOsdTimeout = setTimeout(() => {
+                    jumpOverlay.classList.remove('visible', 'error', 'success');
+                }, 1000);
+                return;
+            }
+
+            // Channel found!
+            jumpOverlay.classList.remove('error');
+            jumpOverlay.classList.add('success');
+            jumpNumEl.innerText = String(matched.num).padStart(2, '0');
+            jumpNameEl.innerText = matched.name;
+            jumpHintEl.innerText = `Đang phát kênh #${String(matched.num).padStart(2, '0')}...`;
+
+            clearTimeout(jumpOsdTimeout);
+            jumpOsdTimeout = setTimeout(() => {
+                jumpOverlay.classList.remove('visible', 'error', 'success');
+            }, 1000);
+
+            // Switch category filter to 'all' if the channel is currently hidden
+            if (currentFilter !== 'all') {
+                const isUnderFilter = (currentFilter === matched.cat) || (currentFilter === 'cable' && matched.cat === 'ent');
+                if (!isUnderFilter) {
+                    applyFilter('all');
+                }
+            }
+
+            // Focus matching tile on the home screen
+            const visible = getVisibleChannels();
+            const targetTile = document.querySelector(`.channel-tile[data-num="${targetNum}"]`);
+            if (targetTile) {
+                const idx = visible.indexOf(targetTile);
+                if (idx !== -1) {
+                    colIndex = idx;
+                    activeRow = 2;
+                    currentPlayingIndex = idx;
+                    refreshFocus();
+                }
+            }
+
+            // Tune in and play channel
+            playLiveChannel(matched.url, `#${String(matched.num).padStart(2, '0')} ${matched.name}`);
+        }
+
+        function handleKey(keyCode) {
+            console.log('handleKey received keyCode=' + keyCode);
+            // Check for numeric keys first (works on home screen & inside video player)
+            let digit = -1;
+            if (keyCode >= 7 && keyCode <= 16) {
+                digit = keyCode - 7; // Android KEYCODE_0 (7) to KEYCODE_9 (16)
+            } else if (keyCode >= 144 && keyCode <= 153) {
+                digit = keyCode - 144; // Android KEYCODE_NUMPAD_0 (144) to KEYCODE_NUMPAD_9 (153)
+            } else if (keyCode >= 48 && keyCode <= 57) {
+                digit = keyCode - 48; // Standard DOM Keyboard 0-9
+            } else if (keyCode >= 96 && keyCode <= 105) {
+                digit = keyCode - 96; // Standard DOM Keyboard Numpad 0-9
+            }
+
+            if (digit !== -1) {
+                handleNumericInput(digit);
+                return;
+            }
+
+            // If user is currently inputting digits, ENTER confirms immediately
+            if (numBuffer.length > 0 && (keyCode === 23 || keyCode === 66)) {
+                executeChannelJump();
+                return;
+            }
+
+            // If user is currently inputting digits, BACK cancels input
+            if (numBuffer.length > 0 && keyCode === 4) {
+                clearTimeout(numTimer);
+                numTimer = null;
+                numBuffer = '';
+                jumpOverlay.classList.remove('visible', 'error', 'success');
+                return;
+            }
+
+            // IF VIDEO PLAYER IS ACTIVE: FULLSCREEN REMOTE SHORTCUTS
+            if (videoModal.classList.contains('active')) {
+                if (keyCode === 22) { // RIGHT: NEXT CHANNEL
+                    playLiveChannelByIndex(currentPlayingIndex + 1);
+                    return;
+                } else if (keyCode === 21) { // LEFT: PREVIOUS CHANNEL
+                    playLiveChannelByIndex(currentPlayingIndex - 1);
+                    return;
+                } else if (keyCode === 23 || keyCode === 66 || keyCode === 4) { // ENTER or BACK: EXIT
+                    closeVideoPlayer();
+                    return;
+                }
+                showPlayerHud();
+                return;
+            }
+
+            // HOME SCREEN NAVIGATION
+            if (keyCode === 22) { // RIGHT
+                let max = 0;
+                if (activeRow === 0) max = actionPills.length - 1;
+                else if (activeRow === 1) max = tabChips.length - 1;
+                else if (activeRow === 2) max = getVisibleChannels().length - 1;
+                else if (activeRow === 3) max = apps.length - 1;
+
+                if (colIndex < max) colIndex++;
+                refreshFocus();
+            } else if (keyCode === 21) { // LEFT
+                if (colIndex > 0) colIndex--;
+                refreshFocus();
+            } else if (keyCode === 20) { // DOWN
+                if (activeRow === 0) {
+                    activeRow = 1;
+                    colIndex = 0;
+                    refreshFocus();
+                } else if (activeRow === 1) {
+                    activeRow = 2;
+                    colIndex = 0;
+                    refreshFocus();
+                } else if (activeRow === 2) {
+                    activeRow = 3;
+                    colIndex = Math.min(colIndex, apps.length - 1);
+                    refreshFocus();
+                }
+            } else if (keyCode === 19) { // UP
+                if (activeRow === 3) {
+                    activeRow = 2;
+                    colIndex = Math.min(colIndex, getVisibleChannels().length - 1);
+                    refreshFocus();
+                } else if (activeRow === 2) {
+                    activeRow = 1;
+                    colIndex = Math.min(colIndex, tabChips.length - 1);
+                    refreshFocus();
+                } else if (activeRow === 1) {
+                    activeRow = 0;
+                    colIndex = 0;
+                    refreshFocus();
+                }
+            } else if (keyCode === 23 || keyCode === 66) { // ENTER / CENTER
+                activateCurrent();
+            }
+        }
+
+        // Clicks
+        actionPills.forEach((p, i) => {
+            p.addEventListener('click', () => {
+                activeRow = 0;
+                colIndex = i;
+                refreshFocus();
+                activateCurrent();
+            });
+        });
+
+        apps.forEach((card, i) => {
+            card.addEventListener('click', () => {
+                activeRow = 3;
+                colIndex = i;
+                refreshFocus();
+                activateCurrent();
+            });
+        });
+
+        window.addEventListener('keydown', (e) => {
+            if (e.key === 'ArrowRight') handleKey(22);
+            else if (e.key === 'ArrowLeft') handleKey(21);
+            else if (e.key === 'ArrowDown') handleKey(20);
+            else if (e.key === 'ArrowUp') handleKey(19);
+            else if (e.key === 'Enter') handleKey(23);
+            else if (e.key === 'Escape' || e.key === 'Backspace') onBackPress();
+        });
+
+        // Load Original App Icons directly from Android System
+        function loadRealAppIcons() {
+            document.querySelectorAll('.app-card').forEach(card => {
+                const pkg = card.getAttribute('data-pkg');
+                if (pkg && window.AndroidBridge && typeof window.AndroidBridge.getAppIcon === 'function') {
+                    try {
+                        const iconBase64 = window.AndroidBridge.getAppIcon(pkg);
+                        if (iconBase64 && iconBase64.startsWith('data:image')) {
+                            const iconBox = card.querySelector('.app-card-icon');
+                            if (iconBox) {
+                                iconBox.innerHTML = `<img src="${iconBase64}" alt="${card.getAttribute('data-title')}">`;
+                                iconBox.style.background = 'rgba(255, 255, 255, 0.05)';
+                            }
+                        }
+                    } catch (e) {
+                        console.error('Failed to get icon for ' + pkg, e);
+                    }
+                }
+            });
+        }
+
+        // Initialize focus on first channel and load real app icons
+        setTimeout(() => {
+            refreshFocus();
+            loadRealAppIcons();
+        }, 150);
+        window.addEventListener('load', loadRealAppIcons);
+    </script>
+</body>
+</html>
