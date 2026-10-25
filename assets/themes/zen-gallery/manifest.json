@@ -1,0 +1,7 @@
+{
+  "id": "zen-gallery",
+  "name": "Zen Gallery",
+  "version": "1.0.0",
+  "layout": "architectural-gallery",
+  "accent": "#b08d57"
+}

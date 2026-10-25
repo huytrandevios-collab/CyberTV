@@ -10,6 +10,8 @@
     <link rel="dns-prefetch" href="https://e1.endpoint.cdn.sctvonline.vn">
     <script src="hls.min.js"></script>
     <script src="channels.js"></script>
+    <link rel="stylesheet" href="themes-engine.css">
+    <link rel="stylesheet" href="premium-paywall.css">
     <style>
         :root {
             --primary-cyan: #00f2fe;
@@ -176,28 +178,35 @@
         }
 
         .action-pill {
-            display: flex;
+            display: inline-flex;
             align-items: center;
-            gap: 8px;
+            justify-content: center;
+            gap: 7px;
             background: rgba(255, 255, 255, 0.08);
-            border: 1px solid rgba(255, 255, 255, 0.15);
+            border: 1.5px solid rgba(255, 255, 255, 0.16);
             backdrop-filter: blur(25px);
             -webkit-backdrop-filter: blur(25px);
-            padding: 5px 14px;
-            border-radius: 18px;
-            font-size: 11px;
-            font-weight: 600;
-            color: rgba(255, 255, 255, 0.85);
+            padding: 0 13px;
+            height: 36px;
+            border-radius: 999px;
+            font-size: 12px;
+            font-weight: 700;
+            color: rgba(255, 255, 255, 0.9);
+            white-space: nowrap;
+            flex-shrink: 0;
+            box-sizing: border-box;
             cursor: pointer;
             transition: all 0.2s cubic-bezier(0.16, 1, 0.3, 1);
         }
 
         .action-pill.icon-only {
-            padding: 5px;
-            min-width: 38px;
-            height: 34px;
+            padding: 0;
+            width: 36px;
+            height: 36px;
+            min-width: 36px;
+            max-width: 36px;
             justify-content: center;
-            border-radius: 12px;
+            border-radius: 50%;
         }
 
         .action-icon-img {
@@ -207,6 +216,25 @@
             object-fit: cover;
             display: block;
             filter: drop-shadow(0 2px 4px rgba(0, 0, 0, 0.35));
+        }
+
+        /* 4K VECTOR ICONS (LUCIDE STYLE) */
+        .lucide-svg {
+            width: 20px;
+            height: 20px;
+            stroke-width: 2.2;
+            stroke: currentColor;
+            fill: none;
+            display: inline-block;
+            vertical-align: middle;
+            filter: drop-shadow(0 2px 5px rgba(0, 0, 0, 0.45));
+            transition: all 0.25s cubic-bezier(0.16, 1, 0.3, 1);
+        }
+
+        .action-pill.focused .lucide-svg {
+            stroke: var(--primary-cyan);
+            filter: drop-shadow(0 0 8px var(--accent-glow));
+            transform: scale(1.15);
         }
 
         .action-pill.focused {
@@ -450,6 +478,58 @@
             border-radius: 3px;
         }
 
+        .app-source-badge {
+            font-size: 8.5px;
+            font-weight: 900;
+            padding: 2px 6px;
+            border-radius: 4px;
+            letter-spacing: 0.5px;
+            box-shadow: 0 2px 6px rgba(0,0,0,0.4);
+            white-space: nowrap;
+        }
+        .app-source-badge.badge-netflix {
+            background: #E50914;
+            color: #ffffff;
+        }
+        .app-source-badge.badge-youtube {
+            background: #FF0000;
+            color: #ffffff;
+        }
+        .app-source-badge.badge-tizentube {
+            background: linear-gradient(135deg, #00b4db, #0083b0);
+            color: #ffffff;
+        }
+        .app-source-badge.badge-chophim {
+            background: linear-gradient(135deg, #ff9f43, #ee5253);
+            color: #ffffff;
+        }
+        .time-left-badge {
+            font-size: 8px;
+            font-weight: 700;
+            background: rgba(0, 0, 0, 0.6);
+            color: #e2e8f0;
+            border: 1px solid rgba(255, 255, 255, 0.2);
+            padding: 1px 5px;
+            border-radius: 3px;
+            white-space: nowrap;
+        }
+        .tile-progress-track {
+            position: absolute;
+            bottom: 0;
+            left: 0;
+            right: 0;
+            height: 3.5px;
+            background: rgba(255, 255, 255, 0.18);
+            z-index: 4;
+            overflow: hidden;
+        }
+        .tile-progress-bar {
+            height: 100%;
+            background: linear-gradient(90deg, #00f2fe, #4facfe);
+            border-radius: 2px;
+            box-shadow: 0 0 8px rgba(0, 242, 254, 0.6);
+        }
+
         .tile-info {
             position: relative;
             z-index: 3;
@@ -473,12 +553,44 @@
             text-overflow: ellipsis;
         }
 
-        /* 3D LASER FOCUS FOR REMOTE */
+        /* 3D LASER FOCUS FOR REMOTE (APPLE TV SPECULAR SHEEN) */
+        .channel-tile {
+            position: relative;
+            overflow: hidden;
+            transition: transform 0.25s cubic-bezier(0.16, 1, 0.3, 1), 
+                        border-color 0.2s ease, 
+                        box-shadow 0.25s ease, 
+                        background 0.2s ease;
+        }
+
+        .channel-tile::after {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: -130%;
+            width: 70%;
+            height: 100%;
+            background: linear-gradient(
+                90deg, 
+                transparent 0%, 
+                rgba(255, 255, 255, 0.22) 50%, 
+                transparent 100%
+            );
+            transform: skewX(-20deg);
+            pointer-events: none;
+            z-index: 8;
+        }
+
+        .channel-tile.focused::after {
+            left: 150%;
+            transition: left 0.7s cubic-bezier(0.16, 1, 0.3, 1);
+        }
+
         .channel-tile.focused {
-            transform: scale(1.05);
+            transform: translateY(-5px) scale(1.08);
             border-color: var(--focus-border);
-            box-shadow: var(--focus-shadow);
-            background: rgba(22, 34, 64, 0.95);
+            box-shadow: 0 16px 36px rgba(0, 0, 0, 0.75), 0 0 25px var(--accent-glow);
+            background: rgba(22, 34, 64, 0.98);
             z-index: 10;
         }
 
@@ -529,9 +641,37 @@
             justify-content: center;
             gap: 5px;
             cursor: pointer;
-            transition: all 0.2s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+            position: relative;
+            overflow: hidden;
+            transition: transform 0.25s cubic-bezier(0.16, 1, 0.3, 1), 
+                        border-color 0.2s ease, 
+                        box-shadow 0.25s ease, 
+                        background 0.2s ease;
             padding: 5px;
             text-align: center;
+        }
+
+        .app-card::after {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: -130%;
+            width: 70%;
+            height: 100%;
+            background: linear-gradient(
+                90deg, 
+                transparent 0%, 
+                rgba(255, 255, 255, 0.25) 50%, 
+                transparent 100%
+            );
+            transform: skewX(-20deg);
+            pointer-events: none;
+            z-index: 8;
+        }
+
+        .app-card.focused::after {
+            left: 150%;
+            transition: left 0.65s cubic-bezier(0.16, 1, 0.3, 1);
         }
 
         .app-card-icon {
@@ -569,16 +709,17 @@
         }
 
         .app-card.focused {
-            transform: scale(1.06);
+            transform: translateY(-4px) scale(1.10);
             border-color: var(--focus-border);
-            background: rgba(25, 40, 75, 0.88);
-            box-shadow: var(--focus-shadow);
+            background: rgba(25, 40, 75, 0.95);
+            box-shadow: 0 14px 30px rgba(0, 0, 0, 0.7), 0 0 22px var(--accent-glow);
             z-index: 10;
         }
 
         .app-card.focused .app-card-icon {
             border-color: var(--focus-border);
             box-shadow: 0 0 16px var(--accent-glow);
+            transform: scale(1.05);
         }
 
         .app-card.focused .app-card-label {
@@ -826,8 +967,10 @@
         }
 
         /* ========================================================
-           THEME 1: CYBER NEON (DEFAULT)
+           UNIFIED THEME: CYBERTV (3 COLOR STYLES + INDEPENDENT BG EFFECTS)
            ======================================================== */
+        /* Phong cách 1: Neon (Cyber Neon) */
+        body.style-neon,
         body.theme-cyber {
             --primary-cyan: #00f2fe;
             --secondary-blue: #4facfe;
@@ -839,9 +982,8 @@
             --badge-color: #ffd54f;
         }
 
-        /* ========================================================
-           THEME 2: MINIMAL DARK GLASS (CLEAN, LOW CPU, STUDIO SLATE)
-           ======================================================== */
+        /* Phong cách 2: Minimal (Minimal Dark Glass) */
+        body.style-minimal,
         body.theme-minimal {
             --primary-cyan: #90CAF9;
             --secondary-blue: #64B5F6;
@@ -853,56 +995,53 @@
             --badge-color: #90CAF9;
         }
 
+        body.style-minimal .tv-screen,
         body.theme-minimal .tv-screen {
             background: radial-gradient(circle at 50% 0%, #151d28 0%, #080a0f 85%) !important;
         }
 
-        body.theme-minimal #bg-canvas {
-            display: none !important;
-        }
-
-        body.theme-minimal #weather-3d-sphere,
-        body.theme-minimal .pulse-dot {
-            animation: none !important;
-        }
-
+        body.style-minimal .channel-tile,
         body.theme-minimal .channel-tile {
             background: rgba(255, 255, 255, 0.04);
             border: 1px solid rgba(255, 255, 255, 0.09);
             border-radius: 12px;
         }
 
+        body.style-minimal .channel-tile.focused,
         body.theme-minimal .channel-tile.focused {
             border-color: #ffffff;
             box-shadow: 0 0 0 2px #64B5F6, 0 8px 24px rgba(0, 0, 0, 0.85);
             background: rgba(30, 40, 58, 0.95);
         }
 
+        body.style-minimal .app-card,
         body.theme-minimal .app-card {
             background: rgba(255, 255, 255, 0.04);
             border: 1px solid rgba(255, 255, 255, 0.08);
             border-radius: 12px;
         }
 
+        body.style-minimal .app-card.focused,
         body.theme-minimal .app-card.focused {
             border-color: #ffffff;
             box-shadow: 0 0 0 2px #64B5F6, 0 8px 20px rgba(0, 0, 0, 0.8);
         }
 
+        body.style-minimal .action-pill,
         body.theme-minimal .action-pill {
             background: rgba(255, 255, 255, 0.05);
             border: 1px solid rgba(255, 255, 255, 0.1);
         }
 
+        body.style-minimal .tab-chip.active,
         body.theme-minimal .tab-chip.active {
             background: rgba(100, 181, 246, 0.2);
             border-color: #64B5F6;
             color: #64B5F6;
         }
 
-        /* ========================================================
-           THEME 3: LUXURY GOLD CINEMA (PREMIUM BLACK & GOLD)
-           ======================================================== */
+        /* Phong cách 3: Gold (Luxury Gold Cinema) */
+        body.style-gold,
         body.theme-cinema {
             --primary-cyan: #ffd700;
             --secondary-blue: #f39c12;
@@ -914,70 +1053,86 @@
             --badge-color: #ffd700;
         }
 
+        body.style-gold .tv-screen,
         body.theme-cinema .tv-screen {
             background: radial-gradient(circle at 80% 15%, rgba(70, 50, 12, 0.55) 0%, #080705 70%),
                         linear-gradient(180deg, #090705 0%, #120e08 50%, #060504 100%) !important;
         }
 
-        body.theme-cinema #bg-canvas {
-            opacity: 0.18;
-            filter: sepia(1) hue-rotate(5deg);
-        }
-
+        body.style-gold .channel-tile,
         body.theme-cinema .channel-tile {
             border-radius: 14px;
             background: rgba(28, 22, 14, 0.88);
             border: 1px solid rgba(255, 215, 0, 0.22);
         }
 
+        body.style-gold .channel-tile.focused,
         body.theme-cinema .channel-tile.focused {
             border-color: #ffd700;
             box-shadow: 0 0 25px rgba(255, 215, 0, 0.55), 0 8px 24px rgba(0, 0, 0, 0.9);
             background: rgba(40, 32, 18, 0.96);
         }
 
+        body.style-gold .app-card,
         body.theme-cinema .app-card {
             border-radius: 14px;
             background: rgba(28, 22, 14, 0.7);
             border: 1px solid rgba(255, 215, 0, 0.18);
         }
 
+        body.style-gold .app-card.focused,
         body.theme-cinema .app-card.focused {
             border-color: #ffd700;
             box-shadow: 0 0 22px rgba(255, 215, 0, 0.5), 0 6px 20px rgba(0, 0, 0, 0.85);
         }
 
+        body.style-gold .tile-logo-box,
         body.theme-cinema .tile-logo-box {
             border-color: rgba(255, 215, 0, 0.4);
             color: #ffd700;
             background: rgba(18, 14, 9, 0.92);
         }
 
+        body.style-gold .resolution-badge,
         body.theme-cinema .resolution-badge {
             background: rgba(255, 215, 0, 0.18);
             color: #ffd700;
             border-color: rgba(255, 215, 0, 0.4);
         }
 
+        body.style-gold .tab-chip.active,
         body.theme-cinema .tab-chip.active {
             background: linear-gradient(135deg, rgba(255, 215, 0, 0.3), rgba(243, 156, 18, 0.2));
             border-color: #ffd700;
             color: #ffd700;
         }
 
+        body.style-gold .action-pill,
         body.theme-cinema .action-pill {
             border-color: rgba(255, 215, 0, 0.25);
             background: rgba(28, 22, 14, 0.7);
         }
 
+        body.style-gold .action-pill.focused,
         body.theme-cinema .action-pill.focused {
             border-color: #ffd700;
             box-shadow: 0 0 18px rgba(255, 215, 0, 0.45);
         }
 
+        body.style-gold .lunar-pill,
         body.theme-cinema .lunar-pill {
             color: #ffd700;
             border-color: rgba(255, 215, 0, 0.35);
+        }
+
+        /* THIẾT LẬP RIÊNG: BẬT / TẮT HIỆU ỨNG NỀN */
+        body.bg-effects-off #bg-canvas {
+            display: none !important;
+        }
+
+        body.bg-effects-off .pulse-dot,
+        body.bg-effects-off .weather-paper-icon {
+            animation: none !important;
         }
     </style>
 </head>
@@ -986,7 +1141,7 @@
     <!-- FLOATING NUMERIC CHANNEL QUICK JUMP OSD OVERLAY -->
     <div id="channel-quick-jump" class="channel-quick-jump">
         <div class="quick-jump-badge">
-            <span class="quick-jump-icon">🔢</span>
+            <svg class="lucide-svg" style="width:18px;height:18px;color:#00f2fe;" viewBox="0 0 24 24"><line x1="4" x2="20" y1="9" y2="9"/><line x1="4" x2="20" y1="15" y2="15"/><line x1="10" x2="8" y1="3" y2="21"/><line x1="16" x2="14" y1="3" y2="21"/></svg>
             <span class="quick-jump-num" id="quick-jump-num">--</span>
         </div>
         <div class="quick-jump-info">
@@ -1022,26 +1177,30 @@
                     <div class="date-badge">
                         <div class="solar-date" id="live-date">Thứ Sáu, 23 Tháng 10</div>
                         <div class="lunar-pill" id="live-lunar">
-                            <span class="lunar-icon">🌙</span>
+                            <svg class="lucide-svg" style="width:11px;height:11px;margin-right:2px;stroke-width:2.5;" viewBox="0 0 24 24"><path d="M12 3a6 6 0 0 0 9 9 9 9 0 1 1-9-9Z"/></svg>
                             <span>14/09 Âm lịch (Bính Ngọ)</span>
                         </div>
                     </div>
                 </div>
 
-                <!-- SMART QUICK ACTIONS -->
+                <!-- SMART QUICK ACTIONS WITH SHARP VECTOR ICONS (LUCIDE STYLE) -->
                 <div class="quick-actions">
-                    <div class="action-pill" data-action="theme" id="action-theme-pill">
-                        <img class="action-icon-img" src="icons/icon_theme.png" alt="Giao diện">
-                        <span id="theme-btn-label">Giao diện: Cyber Neon</span>
+                    <div class="action-pill" data-action="theme" id="action-theme-pill" title="Đổi phong cách màu (Neon / Minimal / Gold)">
+                        <svg class="lucide-svg" viewBox="0 0 24 24"><circle cx="13.5" cy="6.5" r=".5" fill="currentColor"/><circle cx="17.5" cy="10.5" r=".5" fill="currentColor"/><circle cx="8.5" cy="7.5" r=".5" fill="currentColor"/><circle cx="6.5" cy="12.5" r=".5" fill="currentColor"/><path d="M12 2C6.5 2 2 6.5 2 12s4.5 10 10 10c.926 0 1.648-.746 1.648-1.688 0-.437-.18-.835-.437-1.125-.29-.289-.438-.652-.438-1.125a1.64 1.64 0 0 1 1.668-1.668h1.996c3.051 0 5.555-2.503 5.555-5.554C21.965 6.012 17.461 2 12 2z"/></svg>
+                        <span id="theme-btn-label">Neon</span>
                     </div>
-                    <div class="action-pill icon-only" data-action="googletv" id="action-googletv-pill">
-                        <img class="action-icon-img" src="icons/icon_googletv.png" alt="Google TV">
+                    <div class="action-pill" data-action="bgeffects" id="action-bgeffects-pill" title="Bật / Tắt hiệu ứng nền (ON / OFF)">
+                        <svg class="lucide-svg" viewBox="0 0 24 24"><path d="m12 3-1.912 5.813a2 2 0 0 1-1.275 1.275L3 12l5.813 1.912a2 2 0 0 1 1.275 1.275L12 21l1.912-5.813a2 2 0 0 1 1.275-1.275L21 12l-5.813-1.912a2 2 0 0 1-1.275-1.275L12 3Z"/><path d="M5 3v4"/><path d="M19 17v4"/><path d="M3 5h4"/><path d="M17 19h4"/></svg>
+                        <span id="bgeffects-btn-label"><span style="display:inline-block;width:6px;height:6px;border-radius:50%;background:#00ff88;box-shadow:0 0 8px #00ff88;margin-right:4px;"></span>ON</span>
                     </div>
-                    <div class="action-pill icon-only" data-action="cleanram" id="action-cleanram-pill">
-                        <img class="action-icon-img" src="icons/icon_boost.png" alt="Tăng tốc">
+                    <div class="action-pill icon-only" data-action="googletv" id="action-googletv-pill" title="Mở danh sách ứng dụng TV">
+                        <svg class="lucide-svg" viewBox="0 0 24 24"><rect width="7" height="7" x="3" y="3" rx="1.5"/><rect width="7" height="7" x="14" y="3" rx="1.5"/><rect width="7" height="7" x="14" y="14" rx="1.5"/><rect width="7" height="7" x="3" y="14" rx="1.5"/></svg>
                     </div>
-                    <div class="action-pill icon-only" data-action="settings" id="action-settings-pill">
-                        <img class="action-icon-img" src="icons/icon_settings.png" alt="Cài đặt">
+                    <div class="action-pill icon-only" data-action="cleanram" id="action-cleanram-pill" title="Dọn dẹp & giải phóng RAM TV">
+                        <svg class="lucide-svg" viewBox="0 0 24 24"><path d="M4 14a1 1 0 0 1-.78-1.63l9.9-10.2a.5.5 0 0 1 .86.46l-1.92 6.02A1 1 0 0 0 13 10h7a1 1 0 0 1 .78 1.63l-9.9 10.2a.5.5 0 0 1-.86-.46l1.92-6.02A1 1 0 0 0 11 14z"/></svg>
+                    </div>
+                    <div class="action-pill icon-only" data-action="settings" id="action-settings-pill" title="Cài đặt hệ thống Android TV">
+                        <svg class="lucide-svg" viewBox="0 0 24 24"><path d="M12.22 2h-.44a2 2 0 0 0-2 2v.18a2 2 0 0 1-1 1.73l-.43.25a2 2 0 0 1-2 0l-.15-.08a2 2 0 0 0-2.73.73l-.22.38a2 2 0 0 0 .73 2.73l.15.1a2 2 0 0 1 1 1.72v.51a2 2 0 0 1-1 1.74l-.15.09a2 2 0 0 0-.73 2.73l.22.38a2 2 0 0 0 2.73.73l.15-.08a2 2 0 0 1 2 0l.43.25a2 2 0 0 1 1 1.73V20a2 2 0 0 0 2 2h.44a2 2 0 0 0 2-2v-.18a2 2 0 0 1 1-1.73l.43-.25a2 2 0 0 1 2 0l.15.08a2 2 0 0 0 2.73-.73l.22-.39a2 2 0 0 0-.73-2.73l-.15-.08a2 2 0 0 1-1-1.74v-.5a2 2 0 0 1 1-1.74l.15-.09a2 2 0 0 0 .73-2.73l-.22-.38a2 2 0 0 0-2.73-.73l-.15.08a2 2 0 0 1-2 0l-.43-.25a2 2 0 0 1-1-1.73V4a2 2 0 0 0-2-2z"/><circle cx="12" cy="12" r="3"/></svg>
                     </div>
                 </div>
 
@@ -1103,15 +1262,15 @@
                             </g>
                         </svg>
                     </div>
-                    <div>
-                        <div style="display: flex; align-items: baseline; gap: 6px;">
-                            <span style="font-size: 18px; font-weight: 700; color: #ffffff;">29°C</span>
-                            <span style="font-size: 10px; font-weight: 600; color: #8ec5fc;">Nắng Nhẹ</span>
+                    <div style="display:flex; flex-direction:column; gap:2px;">
+                        <div style="display: flex; align-items: baseline; gap: 6px; white-space: nowrap;">
+                            <span style="font-size: 16px; font-weight: 800; color: #ffffff; line-height: 1.1;">29°C</span>
+                            <span style="font-size: 11px; font-weight: 700; color: #7dd3fc; line-height: 1.1;">Nắng Nhẹ</span>
                         </div>
-                        <div style="font-size: 9.5px; color: rgba(255, 255, 255, 0.6); display: flex; gap: 4px;">
+                        <div style="font-size: 10px; color: rgba(255, 255, 255, 0.7); display: flex; align-items: center; gap: 5px; white-space: nowrap; line-height: 1.1;">
                             <span>TP. HCM</span>
                             <span>•</span>
-                            <span>AQI: <b style="color: #00ff88;">32</b></span>
+                            <span>AQI <b style="color: #00ff88;">32 Tốt</b></span>
                         </div>
                     </div>
                 </div>
@@ -1126,26 +1285,26 @@
                 </div>
             </div>
 
-            <!-- SECTION 1: IPTV CHANNELS (82 KÊNH CHỌN LỌC) -->
+            <!-- SECTION 1: ENTERTAINMENT WATCH HISTORY (TIẾP TỤC XEM) -->
             <div class="section-iptv">
                 <div class="section-header-iptv">
                     <div style="display: flex; align-items: center; gap: 8px; white-space: nowrap;">
-                        <span class="section-title">Kênh Truyền Hình</span>
+                        <span class="section-title">Tiếp Tục Xem • Lịch Sử Giải Trí</span>
                     </div>
 
-                    <!-- DANH MỤC THỂ LOẠI -->
+                    <!-- DANH MỤC ỨNG DỤNG -->
                     <div class="tabs-row">
-                        <div class="tab-chip active" data-filter="all">Tất Cả (60)</div>
-                        <div class="tab-chip" data-filter="vtv">Kênh VTV</div>
-                        <div class="tab-chip" data-filter="htv">Kênh HTV</div>
-                        <div class="tab-chip" data-filter="news">An Ninh & Tin Tức</div>
-                        <div class="tab-chip" data-filter="cable">Cáp SCTV & Phim</div>
-                        <div class="tab-chip" data-filter="local">Đài Địa Phương</div>
+                        <div class="tab-chip active" data-filter="all">Tất Cả (8)</div>
+                        <div class="tab-chip" data-filter="netflix">Netflix</div>
+                        <div class="tab-chip" data-filter="youtube">YouTube</div>
+                        <div class="tab-chip" data-filter="tizentube">TizenTube</div>
+                        <div class="tab-chip" data-filter="chophim">Chợ Phim TV</div>
+                        <div class="tab-chip" data-filter="channels" style="border-color: rgba(0, 242, 254, 0.4); color: #00f2fe;">📺 Kênh TV (60)</div>
                     </div>
                 </div>
 
                 <div class="channel-stream-row" id="channel-row">
-                    <!-- DYNAMICALLY POPULATED WITH ALL 82 CHANNELS -->
+                    <!-- DYNAMICALLY POPULATED WITH ENTERTAINMENT WATCH HISTORY -->
                 </div>
             </div>
 
@@ -1159,26 +1318,30 @@
                     </div>
 
                     <div class="app-card" data-pkg="io.gh.reisxd.tizentube.cobalt" data-title="TizenTube" data-desc="Xem YouTube không quảng cáo, mở rộng tính năng tài khoản cao cấp và chất lượng 4K HDR.">
+                        <span class="app-vip-badge">👑 VIP</span>
                         <div class="app-card-icon" style="background: linear-gradient(135deg, #00f2fe, #4facfe); color: white;">▶️</div>
                         <span class="app-card-label">TizenTube</span>
                     </div>
 
                     <div class="app-card" data-pkg="com.netflix.ninja" data-title="Netflix" data-desc="Kho phim điện ảnh, bom tấn Hollywood và series truyền hình độc quyền chuẩn 4K Dolby Vision.">
+                        <span class="app-vip-badge">👑 VIP</span>
                         <div class="app-card-icon" style="background: #000000; color: #e50914; font-weight: 900; font-size: 13px;">NETFLIX</div>
                         <span class="app-card-label">Netflix</span>
                     </div>
 
                     <div class="app-card" data-pkg="com.chophim.tv" data-title="Cho Phim TV" data-desc="Kho phim trực tuyến phong phú, cập nhật phim bộ và phim chiếu rạp mới nhất.">
+                        <span class="app-vip-badge">👑 VIP</span>
                         <div class="app-card-icon" style="background: linear-gradient(135deg, #f6d365, #fda085); color: #333;">🍿</div>
                         <span class="app-card-label">Cho Phim TV</span>
                     </div>
 
-                    <div class="app-card" data-pkg="com.tcl.browser" data-title="BrowseHere Trình duyệt web" data-desc="Trình duyệt web tốc độ cao chuyên dụng cho Android TV, chặn quảng cáo và lướt web mượt mà.">
+                    <div class="app-card" data-pkg="com.tcl.browser" data-title="BrowseHere" data-desc="Trình duyệt web tốc độ cao chuyên dụng cho Android TV, chặn quảng cáo và lướt web mượt mà.">
                         <div class="app-card-icon" style="background: linear-gradient(135deg, #2193b0, #6dd5ed); color: white;">🌐</div>
                         <span class="app-card-label">BrowseHere</span>
                     </div>
 
                     <div class="app-card" data-pkg="com.softmedia.receiver" data-title="AirReceiver" data-desc="Thu phát sóng không dây AirPlay, DLNA và UPnP từ iPhone, iPad, Mac và Android lên TV.">
+                        <span class="app-vip-badge">👑 VIP</span>
                         <div class="app-card-icon" style="background: linear-gradient(135deg, #74b9ff, #0984e3); color: white;">📲</div>
                         <span class="app-card-label">AirReceiver</span>
                     </div>
@@ -1209,6 +1372,7 @@
                     </div>
 
                     <div class="app-card" data-pkg="com.amazon.amazonvideo.livingroom" data-title="Prime Video" data-desc="Dịch vụ phim và chương trình truyền hình trực tuyến Amazon Originals chất lượng cao.">
+                        <span class="app-vip-badge">👑 VIP</span>
                         <div class="app-card-icon" style="background: linear-gradient(135deg, #00a8e1, #002b49); color: white; font-weight: 900; font-size: 11px;">PRIME</div>
                         <span class="app-card-label">Prime Video</span>
                     </div>
@@ -1403,8 +1567,11 @@
         function renderCanvas() {
             if (!isCanvasAnimating || !ctx) return;
             ctx.clearRect(0, 0, w, h);
-            const isCinema = (typeof currentThemeId !== 'undefined' && currentThemeId === 'cinema');
-            const particleRgb = isCinema ? '255, 215, 0' : '0, 242, 254';
+            let particleRgb = '0, 242, 254';
+            if (typeof currentStyleId !== 'undefined') {
+                if (currentStyleId === 'gold') particleRgb = '255, 215, 0';
+                else if (currentStyleId === 'minimal') particleRgb = '144, 202, 249';
+            }
 
             for (let i = 0; i < particles.length; i++) {
                 const p = particles[i];
@@ -1458,15 +1625,54 @@
         const channelRow = document.getElementById('channel-row');
 
         const fallbackThumbnails = [
-            "https://images.unsplash.com/photo-1585829365295-ab7cd400c167?w=600&auto=format&fit=crop&q=80",
-            "https://images.unsplash.com/photo-1514306191717-452ec28c7814?w=600&auto=format&fit=crop&q=80",
-            "https://images.unsplash.com/photo-1507679799987-c73779587ccf?w=600&auto=format&fit=crop&q=80",
-            "https://images.unsplash.com/photo-1509198397868-475647b2a1e5?w=600&auto=format&fit=crop&q=80",
-            "https://images.unsplash.com/photo-1478760329108-5c3ed9d495a0?w=600&auto=format&fit=crop&q=80",
-            "https://images.unsplash.com/photo-1528127269322-539801943592?w=600&auto=format&fit=crop&q=80",
-            "https://images.unsplash.com/photo-1541872703-74c5e44368f9?w=600&auto=format&fit=crop&q=80",
-            "https://images.unsplash.com/photo-1534447677768-be436bb09401?w=600&auto=format&fit=crop&q=80"
+            "backdrops/news_studio.jpg",
+            "backdrops/cinema_movie.jpg",
+            "backdrops/football_stadium.jpg",
+            "backdrops/hifi_music.jpg",
+            "backdrops/kyoto_garden.jpg"
         ];
+
+        function renderWatchHistory(itemsList) {
+            channelRow.innerHTML = '';
+            itemsList.forEach((item, idx) => {
+                const tile = document.createElement('div');
+                tile.className = 'channel-tile entertainment-tile' + (idx === 0 ? ' focused' : '');
+                tile.setAttribute('data-category', item.cat);
+                tile.setAttribute('data-pkg', item.pkg);
+                tile.setAttribute('data-title', item.title);
+                tile.setAttribute('data-desc', item.desc || item.sub);
+                tile.setAttribute('data-app', item.app);
+                tile.setAttribute('data-sub', item.sub);
+                tile.setAttribute('data-backdrop', item.backdrop);
+
+                tile.innerHTML = `
+                    <img class="tile-stream-bg" src="${item.backdrop}">
+                    <div class="tile-glass-overlay"></div>
+                    <div class="tile-top-tag">
+                        <span class="app-source-badge ${item.badgeClass}">${item.badge}</span>
+                        <span class="resolution-badge">${item.res}</span>
+                        <span class="time-left-badge">${item.duration}</span>
+                    </div>
+                    <div class="tile-info">
+                        <div class="tile-channel-title">${item.title}</div>
+                        <div class="tile-channel-desc">${item.app} • ${item.sub}</div>
+                    </div>
+                    <div class="tile-progress-track">
+                        <div class="tile-progress-bar" style="width: ${item.progress}%;"></div>
+                    </div>
+                `;
+
+                tile.addEventListener('click', () => {
+                    activeRow = 2;
+                    const visible = getVisibleChannels();
+                    colIndex = visible.indexOf(tile);
+                    refreshFocus();
+                    activateCurrent();
+                });
+
+                channelRow.appendChild(tile);
+            });
+        }
 
         function renderChannels(channelsList) {
             channelRow.innerHTML = '';
@@ -1509,8 +1715,13 @@
             });
         }
 
-        // Render immediately using ALL_CHANNELS from channels.js
-        if (typeof ALL_CHANNELS !== 'undefined' && Array.isArray(ALL_CHANNELS)) {
+        // Render immediately using ENTERTAINMENT_WATCH_HISTORY or fallback to ALL_CHANNELS
+        const watchHistoryList = (typeof ENTERTAINMENT_WATCH_HISTORY !== 'undefined' && Array.isArray(ENTERTAINMENT_WATCH_HISTORY))
+            ? ENTERTAINMENT_WATCH_HISTORY
+            : [];
+        if (watchHistoryList.length > 0) {
+            renderWatchHistory(watchHistoryList);
+        } else if (typeof ALL_CHANNELS !== 'undefined' && Array.isArray(ALL_CHANNELS)) {
             renderChannels(ALL_CHANNELS);
         }
 
@@ -1568,6 +1779,19 @@
         }
 
         function playLiveChannel(url, title) {
+            // Check VIP Channel Lock
+            if (title && (title.includes('SCTV') || title.includes('AMC') || title.includes('Cáp') || title.includes('Cinema'))) {
+                const isUnlocked = typeof window.isPremiumActive === 'function' ? window.isPremiumActive() : false;
+                if (!isUnlocked) {
+                    if (typeof window.showPaywall === 'function') {
+                        window.showPaywall('channel', title);
+                    } else {
+                        alert('Kênh ' + title + ' là kênh truyền hình VIP. Vui lòng kích hoạt bản quyền CyberTV Premium (79.000đ).');
+                    }
+                    return;
+                }
+            }
+
             playerChannelTitle.innerText = title;
             videoPlayer.classList.remove('ready');
             videoModal.classList.add('active');
@@ -1697,10 +1921,17 @@
                 }
             });
 
+            if (filter === 'channels') {
+                if (window.openChannelBrowserModal) {
+                    window.openChannelBrowserModal('all');
+                }
+                return;
+            }
+
             const allTiles = Array.from(document.querySelectorAll('.channel-tile'));
             allTiles.forEach(tile => {
                 const cat = tile.getAttribute('data-category');
-                if (filter === 'all' || cat === filter || (filter === 'cable' && cat === 'ent')) {
+                if (filter === 'all' || cat === filter) {
                     tile.style.display = 'flex';
                 } else {
                     tile.style.display = 'none';
@@ -1720,9 +1951,9 @@
         // REMOTE SPATIAL NAVIGATION SYSTEM
         // Row 0: Action Pills
         // Row 1: Category Filter Tabs
-        // Row 2: Channels Row (88 Channels)
+        // Row 2: Entertainment History Shelf / Channels Row
         // Row 3: Apps Row
-        let activeRow = 2; // Default focus directly on channels!
+        let activeRow = 2; // Default focus directly on entertainment history!
         let colIndex = 0;
 
         const actionPills = Array.from(document.querySelectorAll('.action-pill'));
@@ -1742,11 +1973,25 @@
                     target.classList.add('focused');
                     const act = target.getAttribute('data-action');
                     if (act === 'theme') {
+                        const styleName = (typeof currentStyleId !== 'undefined' && currentStyleId === 'gold')
+                            ? 'Gold'
+                            : ((typeof currentStyleId !== 'undefined' && currentStyleId === 'minimal') ? 'Minimal' : 'Neon');
                         updateSpotlight(
-                            'GIAO DIỆN PREMIUM',
-                            'Bấm phím OK để chuyển đổi qua lại 3 giao diện: Cyber Neon, Minimal Dark Glass, Luxury Gold Cinema.',
-                            'THEME ENGINE • P0',
-                            'ĐỔI GIAO DIỆN [OK]',
+                            `THEME CYBERTV • PHONG CÁCH ${styleName.toUpperCase()}`,
+                            'Bấm phím OK để chuyển đổi giữa 3 phong cách màu của Theme CyberTV: Neon, Minimal và Gold.',
+                            'THEME CYBERTV • 3 PHONG CÁCH MÀU',
+                            'ĐỔI PHONG CÁCH MÀU [OK]',
+                            null
+                        );
+                    } else if (act === 'bgeffects') {
+                        const isBgOn = (typeof currentBgEffects === 'undefined') ? true : currentBgEffects;
+                        updateSpotlight(
+                            `HIỆU ỨNG NỀN: ${isBgOn ? 'ĐANG BẬT' : 'ĐANG TẮT'}`,
+                            isBgOn
+                                ? 'Hiệu ứng hạt sáng 3D chuyển động nền đang bật. Bấm OK để tắt độc lập mà vẫn giữ nguyên phong cách màu.'
+                                : 'Hiệu ứng hạt sáng 3D đang tắt để tiết kiệm CPU. Bấm OK để bật lại hiệu ứng nền.',
+                            'THIẾT LẬP HIỆU ỨNG NỀN RIÊNG',
+                            isBgOn ? 'TẮT HIỆU ỨNG [OK]' : 'BẬT HIỆU ỨNG [OK]',
                             null
                         );
                     } else if (act === 'googletv') {
@@ -1788,10 +2033,14 @@
                 if (target) {
                     target.classList.add('focused');
                     target.scrollIntoView({ behavior: 'smooth', inline: 'center', block: 'nearest' });
+                    const filterVal = target.getAttribute('data-filter');
+                    const filterDesc = filterVal === 'channels'
+                        ? 'Mở kho 60 kênh truyền hình trực tiếp độ nét cao 1080p.'
+                        : `Lọc danh sách các video & phim lịch sử xem của ${target.innerText.trim()}.`;
                     updateSpotlight(
                         target.innerText.trim(),
-                        'Lọc danh sách các kênh truyền hình theo thể loại này.',
-                        'BỘ LỌC THỂ LOẠI',
+                        filterDesc,
+                        'BỘ LỌC ỨNG DỤNG',
                         'CHỌN [OK]',
                         null
                     );
@@ -1806,18 +2055,31 @@
                     target.scrollIntoView({ behavior: 'smooth', inline: 'center', block: 'nearest' });
 
                     const title = target.getAttribute('data-title');
-                    const num = target.getAttribute('data-num');
-                    const catLabel = target.getAttribute('data-cat-label');
+                    const pkg = target.getAttribute('data-pkg');
+                    const app = target.getAttribute('data-app') || 'ỨNG DỤNG GIẢI TRÍ';
                     const desc = target.getAttribute('data-desc');
-                    const bg = target.querySelector('.tile-stream-bg') ? target.querySelector('.tile-stream-bg').src : null;
+                    const sub = target.getAttribute('data-sub');
+                    const bg = target.getAttribute('data-backdrop') || (target.querySelector('.tile-stream-bg') ? target.querySelector('.tile-stream-bg').src : null);
 
-                    updateSpotlight(
-                        `#${String(num).padStart(2, '0')} ${title}`,
-                        desc || `Kênh ${title} thuộc nhóm ${catLabel}. Phát sóng trực tiếp chất lượng cao 1080p FHD.`,
-                        catLabel.toUpperCase(),
-                        'XEM TOÀN MÀN HÌNH [OK]',
-                        bg
-                    );
+                    if (pkg) {
+                        updateSpotlight(
+                            `🎬 ${title}`,
+                            `Ứng dụng: ${app} • ${sub || ''}. ${desc || ''} Bấm phím OK để mở ứng dụng tiếp tục xem.`,
+                            `TIẾP TỤC XEM • ${app.toUpperCase()}`,
+                            `TIẾP TỤC XEM [OK]`,
+                            bg
+                        );
+                    } else {
+                        const num = target.getAttribute('data-num');
+                        const catLabel = target.getAttribute('data-cat-label');
+                        updateSpotlight(
+                            `#${String(num).padStart(2, '0')} ${title}`,
+                            desc || `Kênh ${title} thuộc nhóm ${catLabel}. Phát sóng trực tiếp chất lượng cao 1080p FHD.`,
+                            catLabel ? catLabel.toUpperCase() : 'TRUYỀN HÌNH',
+                            'XEM TOÀN MÀN HÌNH [OK]',
+                            bg
+                        );
+                    }
                 }
             } else if (activeRow === 3) {
                 colIndex = Math.max(0, Math.min(colIndex, apps.length - 1));
@@ -1849,6 +2111,8 @@
                 const act = target.getAttribute('data-action');
                 if (act === 'theme') {
                     cycleNextTheme();
+                } else if (act === 'bgeffects') {
+                    toggleBackgroundEffects();
                 } else if (act === 'googletv') {
                     if (window.AndroidBridge && window.AndroidBridge.openGoogleTV) {
                         window.AndroidBridge.openGoogleTV();
@@ -1870,17 +2134,35 @@
                 const visible = getVisibleChannels();
                 const target = visible[colIndex];
                 if (target) {
-                    currentPlayingIndex = colIndex;
-                    const url = target.getAttribute('data-url');
-                    const title = target.getAttribute('data-title');
-                    const num = target.getAttribute('data-num');
-                    playLiveChannel(url, `#${num} ${title}`);
+                    const pkg = target.getAttribute('data-pkg');
+                    if (pkg) {
+                        if (window.AndroidBridge && window.AndroidBridge.launchApp) {
+                            window.AndroidBridge.launchApp(pkg);
+                        }
+                    } else {
+                        currentPlayingIndex = colIndex;
+                        const url = target.getAttribute('data-url');
+                        const title = target.getAttribute('data-title');
+                        const num = target.getAttribute('data-num');
+                        playLiveChannel(url, `#${num} ${title}`);
+                    }
                 }
             } else if (activeRow === 3) {
                 const target = apps[colIndex];
                 if (target) {
                     const pkg = target.getAttribute('data-pkg');
-                    if (window.AndroidBridge) {
+                    const title = target.getAttribute('data-title') || 'Ứng dụng';
+                    const VIP_PKGS = ['io.gh.reisxd.tizentube.cobalt', 'com.netflix.ninja', 'com.chophim.tv', 'com.softmedia.receiver', 'com.amazon.amazonvideo.livingroom'];
+                    const isUnlocked = typeof window.isPremiumActive === 'function' ? window.isPremiumActive() : false;
+                    if (VIP_PKGS.includes(pkg) && !isUnlocked) {
+                        if (typeof window.showPaywall === 'function') {
+                            window.showPaywall('app', title);
+                        } else {
+                            alert('Ứng dụng ' + title + ' yêu cầu kích hoạt bản quyền CyberTV Premium (79.000đ).');
+                        }
+                        return;
+                    }
+                    if (window.AndroidBridge && window.AndroidBridge.launchApp) {
                         window.AndroidBridge.launchApp(pkg);
                     }
                 }
@@ -2018,19 +2300,19 @@
             if (!toast) {
                 toast = document.createElement('div');
                 toast.id = 'volume-hud-toast';
-                toast.style.cssText = 'position:fixed;top:40px;right:40px;background:rgba(8,14,26,0.92);border:1.5px solid rgba(0,242,254,0.45);backdrop-filter:blur(20px);border-radius:18px;padding:14px 28px;color:#fff;font-size:18px;font-weight:bold;display:flex;align-items:center;gap:14px;z-index:99999;box-shadow:0 12px 40px rgba(0,0,0,0.8);transition:opacity 0.2s ease;pointer-events:none;';
+                toast.style.cssText = 'position:fixed;top:40px;right:40px;background:rgba(8,14,26,0.94);border:1.5px solid rgba(0,242,254,0.45);backdrop-filter:blur(24px);-webkit-backdrop-filter:blur(24px);border-radius:18px;padding:14px 28px;color:#fff;font-size:17px;font-weight:bold;display:flex;align-items:center;gap:14px;z-index:99999;box-shadow:0 14px 45px rgba(0,0,0,0.85),0 0 20px rgba(0,242,254,0.25);transition:opacity 0.2s cubic-bezier(0.16,1,0.3,1);pointer-events:none;';
                 document.body.appendChild(toast);
             }
-            let icon = '🔊';
+            let iconSvg = '<svg class="lucide-svg" style="width:24px;height:24px;color:#00f2fe;" viewBox="0 0 24 24"><polygon points="11 5 6 9 2 9 2 15 6 15 11 19 11 5"/><path d="M15.54 8.46a5 5 0 0 1 0 7.07"/><path d="M19.07 4.93a10 10 0 0 1 0 14.14"/></svg>';
             let title = 'TĂNG ÂM LƯỢNG';
             if (action === 'down') {
-                icon = '🔉';
+                iconSvg = '<svg class="lucide-svg" style="width:24px;height:24px;color:#00f2fe;" viewBox="0 0 24 24"><polygon points="11 5 6 9 2 9 2 15 6 15 11 19 11 5"/><path d="M15.54 8.46a5 5 0 0 1 0 7.07"/></svg>';
                 title = 'GIẢM ÂM LƯỢNG';
             } else if (action === 'mute') {
-                icon = '🔇';
+                iconSvg = '<svg class="lucide-svg" style="width:24px;height:24px;color:#ff3b30;" viewBox="0 0 24 24"><polygon points="11 5 6 9 2 9 2 15 6 15 11 19 11 5"/><line x1="22" x2="16" y1="9" y2="15"/><line x1="16" x2="22" y1="9" y2="15"/></svg>';
                 title = 'BẬT / TẮT TIẾNG';
             }
-            toast.innerHTML = `<span style="font-size:26px;">${icon}</span><span style="letter-spacing:1px;background:linear-gradient(135deg,#00f2fe,#4facfe);-webkit-background-clip:text;-webkit-text-fill-color:transparent;">${title}</span>`;
+            toast.innerHTML = `${iconSvg}<span style="letter-spacing:1px;background:linear-gradient(135deg,#00f2fe,#4facfe);-webkit-background-clip:text;-webkit-text-fill-color:transparent;">${title}</span>`;
             toast.style.opacity = '1';
             clearTimeout(window.__volToastTimer);
             window.__volToastTimer = setTimeout(() => {
@@ -2043,10 +2325,11 @@
             if (!toast) {
                 toast = document.createElement('div');
                 toast.id = 'power-hud-toast';
-                toast.style.cssText = 'position:fixed;top:40px;left:50%;transform:translateX(-50%);background:rgba(20,5,10,0.95);border:1.5px solid rgba(255,59,48,0.5);backdrop-filter:blur(20px);border-radius:18px;padding:14px 32px;color:#ff3b30;font-size:18px;font-weight:bold;display:flex;align-items:center;gap:14px;z-index:99999;box-shadow:0 12px 40px rgba(255,59,48,0.3);transition:opacity 0.2s ease;pointer-events:none;';
+                toast.style.cssText = 'position:fixed;top:40px;left:50%;transform:translateX(-50%);background:rgba(20,5,10,0.95);border:1.5px solid rgba(255,59,48,0.5);backdrop-filter:blur(24px);-webkit-backdrop-filter:blur(24px);border-radius:18px;padding:14px 32px;color:#ff3b30;font-size:17px;font-weight:bold;display:flex;align-items:center;gap:14px;z-index:99999;box-shadow:0 14px 45px rgba(255,59,48,0.35);transition:opacity 0.2s cubic-bezier(0.16,1,0.3,1);pointer-events:none;';
                 document.body.appendChild(toast);
             }
-            toast.innerHTML = `<span style="font-size:26px;">⚡</span><span style="letter-spacing:1px;color:#ff453a;">CHUYỂN CHẾ ĐỘ NGHỈ (STANDBY)</span>`;
+            let powerSvg = '<svg class="lucide-svg" style="width:24px;height:24px;color:#ff453a;" viewBox="0 0 24 24"><path d="M18.36 6.64a9 9 0 1 1-12.73 0"/><line x1="12" x2="12" y1="2" y2="12"/></svg>';
+            toast.innerHTML = `${powerSvg}<span style="letter-spacing:1px;color:#ff453a;">CHUYỂN CHẾ ĐỘ NGHỈ (STANDBY)</span>`;
             toast.style.opacity = '1';
             clearTimeout(window.__powerToastTimer);
             window.__powerToastTimer = setTimeout(() => {
@@ -2173,112 +2456,162 @@
             });
         });
 
+        // ==========================================
+        // BỘ ĐIỀU HƯỚNG ĐA NỀN TẢNG (Android TV, LG webOS, Samsung Tizen)
+        // ==========================================
         window.addEventListener('keydown', (e) => {
-            if (e.key === 'ArrowRight') handleKey(22);
-            else if (e.key === 'ArrowLeft') handleKey(21);
-            else if (e.key === 'ArrowDown') handleKey(20);
-            else if (e.key === 'ArrowUp') handleKey(19);
-            else if (e.key === 'Enter') handleKey(23);
-            else if (e.key === 'Escape' || e.key === 'Backspace') onBackPress();
+            const code = e.keyCode || e.which;
+            // D-Pad Navigation
+            if (e.key === 'ArrowRight' || code === 39 || code === 22) handleKey(22);
+            else if (e.key === 'ArrowLeft' || code === 37 || code === 21) handleKey(21);
+            else if (e.key === 'ArrowDown' || code === 40 || code === 20) handleKey(20);
+            else if (e.key === 'ArrowUp' || code === 38 || code === 19) handleKey(19);
+            else if (e.key === 'Enter' || code === 13 || code === 23) handleKey(23);
+            // Phím Back/Return: Android (4, 27), LG webOS (461), Samsung Tizen (10009)
+            else if (e.key === 'Escape' || e.key === 'Backspace' || code === 4 || code === 461 || code === 10009 || code === 27) {
+                onBackPress();
+            }
         });
 
         // ==========================================
-        // THEME RENDERING ENGINE (PHASE 2 & 3)
+        // UNIFIED CYBERTV THEME ENGINE (v2.0)
+        // Theme: CyberTV | 3 Color Styles: Neon, Minimal, Gold | Separate Background Effects
         // ==========================================
-        const THEME_MANIFESTS = {
-            'cyber': {
-                id: 'cyber',
-                name: 'Cyber Neon',
-                version: '1.0.0',
-                author: 'CyberTV Premium',
-                accent: '#00f2fe',
-                canvasParticles: true,
-                desc: 'Giao diện tương lai sắc nét với ánh sáng Cyber Neon và hiệu ứng hạt 3D.'
-            },
-            'minimal': {
-                id: 'minimal',
-                name: 'Minimal Dark Glass',
-                version: '1.0.0',
-                author: 'CyberTV Premium',
-                accent: '#90CAF9',
-                canvasParticles: false,
-                desc: 'Thiết kế tối giản kính mờ sang trọng, loại bỏ chuyển động thừa, tiết kiệm CPU.'
-            },
-            'cinema': {
-                id: 'cinema',
-                name: 'Luxury Gold Cinema',
-                version: '1.0.0',
-                author: 'CyberTV Premium',
-                accent: '#ffd700',
-                canvasParticles: true,
-                desc: 'Đẳng cấp rạp chiếu phim với ánh vàng hoàng gia và tông màu đen obsidian.'
+        const CYBERTV_THEME = {
+            id: 'cybertv',
+            name: 'CyberTV',
+            version: '2.0.0',
+            author: 'CyberTV Studio',
+            styles: {
+                'neon': {
+                    id: 'neon',
+                    name: 'Neon',
+                    fullName: 'Cyber Neon',
+                    accent: '#00f2fe',
+                    desc: 'Phong cách tương lai sắc nét với ánh sáng Cyber Neon Cyan.'
+                },
+                'minimal': {
+                    id: 'minimal',
+                    name: 'Minimal',
+                    fullName: 'Minimal Dark Glass',
+                    accent: '#90CAF9',
+                    desc: 'Phong cách tối giản kính mờ sang trọng với viền lấy nét trắng.'
+                },
+                'gold': {
+                    id: 'gold',
+                    name: 'Gold',
+                    fullName: 'Luxury Gold Cinema',
+                    accent: '#ffd700',
+                    desc: 'Phong cách rạp chiếu phim với ánh vàng 24K và tông màu đen Obsidian.'
+                }
             }
         };
 
-        const THEME_CYCLE = ['cyber', 'minimal', 'cinema'];
-        let currentThemeId = 'cyber';
+        // Tương thích ngược cho các lệnh gọi đọc THEME_MANIFESTS
+        const THEME_MANIFESTS = CYBERTV_THEME.styles;
 
-        function validateTheme(themeId) {
-            if (themeId && THEME_MANIFESTS.hasOwnProperty(themeId)) {
-                return themeId;
-            }
-            console.warn('Theme invalid, falling back to cyber:', themeId);
-            return 'cyber'; // Safe fallback
+        const STYLE_CYCLE = ['neon', 'minimal', 'gold'];
+        let currentThemeId = 'cybertv';
+        let currentStyleId = 'neon';
+        let currentBgEffects = true;
+
+        function normalizeStyleId(rawId) {
+            if (!rawId) return 'neon';
+            const clean = String(rawId).trim().toLowerCase();
+            if (clean === 'minimal') return 'minimal';
+            if (clean === 'gold' || clean === 'cinema') return 'gold';
+            if (clean === 'neon' || clean === 'cyber' || clean === 'cybertv') return 'neon';
+            console.warn('Style invalid, falling back to neon:', rawId);
+            return 'neon';
         }
 
-        function applyTheme(themeId, saveToStorage = true) {
-            const validId = validateTheme(themeId);
-            currentThemeId = validId;
-            const theme = THEME_MANIFESTS[validId];
+        function applyThemeConfig(styleId, bgEffects, saveToStorage = true, shouldShowToast = false) {
+            const validStyle = normalizeStyleId(styleId);
+            const validBg = (typeof bgEffects === 'boolean') ? bgEffects : currentBgEffects;
 
-            // Apply body classes
-            document.body.classList.remove('theme-cyber', 'theme-minimal', 'theme-cinema');
-            document.body.classList.add('theme-' + validId);
+            currentThemeId = 'cybertv';
+            currentStyleId = validStyle;
+            currentBgEffects = validBg;
 
-            // Update Particle Canvas activity (Minimal disables particles -> saves CPU!)
-            if (theme.canvasParticles) {
+            const styleMeta = CYBERTV_THEME.styles[validStyle];
+
+            // Áp dụng class cho body (cả class mới lẫn alias tương thích)
+            document.body.classList.remove(
+                'theme-cyber', 'theme-minimal', 'theme-cinema',
+                'style-neon', 'style-minimal', 'style-gold',
+                'bg-effects-on', 'bg-effects-off'
+            );
+            document.body.classList.add('theme-cybertv', 'style-' + validStyle);
+            document.body.classList.add(validBg ? 'bg-effects-on' : 'bg-effects-off');
+
+            // Điều khiển hiệu ứng hạt nền độc lập hoàn toàn với phong cách màu
+            if (validBg) {
                 if (typeof startCanvas === 'function') startCanvas();
             } else {
                 if (typeof stopCanvas === 'function') stopCanvas();
             }
 
-            // Update Theme Pill in Action Bar
+            // Cập nhật nhãn nút trên thanh Quick Actions
             const themeLabelEl = document.getElementById('theme-btn-label');
-            if (themeLabelEl) {
-                themeLabelEl.innerText = 'Giao diện: ' + theme.name;
+            if (themeLabelEl && styleMeta) {
+                themeLabelEl.innerText = styleMeta.name;
+            }
+            const bgLabelEl = document.getElementById('bgeffects-btn-label');
+            if (bgLabelEl) {
+                bgLabelEl.innerHTML = validBg
+                    ? '<span style="display:inline-block;width:6px;height:6px;border-radius:50%;background:#00ff88;box-shadow:0 0 8px #00ff88;margin-right:4px;"></span>ON'
+                    : '<span style="display:inline-block;width:6px;height:6px;border-radius:50%;background:#64748b;margin-right:4px;"></span>OFF';
             }
 
-            // Save to Native SharedPreferences + Web localStorage
+            // Lưu cấu trúc thống nhất vào localStorage + Native SharedPreferences
             if (saveToStorage) {
+                const configObj = {
+                    themeId: 'cybertv',
+                    style: validStyle,
+                    bgEffects: validBg
+                };
                 try {
-                    localStorage.setItem('cybertv_theme', validId);
-                    if (window.AndroidBridge && window.AndroidBridge.saveTheme) {
-                        window.AndroidBridge.saveTheme(validId);
+                    localStorage.setItem('cybertv_theme_config', JSON.stringify(configObj));
+                    localStorage.removeItem('cybertv_theme');
+                    if (window.AndroidBridge) {
+                        if (typeof window.AndroidBridge.saveThemeConfig === 'function') {
+                            window.AndroidBridge.saveThemeConfig('cybertv', validStyle, validBg);
+                        } else if (typeof window.AndroidBridge.saveTheme === 'function') {
+                            window.AndroidBridge.saveTheme(validStyle);
+                        }
                     }
                 } catch (e) {
-                    console.error('Save theme error:', e);
+                    console.error('Save theme config error:', e);
                 }
             }
 
-            // Re-apply focus styles smoothly without reloading video stream
             refreshFocus();
 
-            console.log('Theme applied successfully:', validId);
+            if (shouldShowToast && styleMeta) {
+                showThemeToast(styleMeta, validBg);
+            }
+
+            console.log('CyberTV Theme Config applied:', { themeId: 'cybertv', style: validStyle, bgEffects: validBg });
             return true;
         }
 
-        function cycleNextTheme() {
-            const currentIdx = THEME_CYCLE.indexOf(currentThemeId);
-            const nextIdx = (currentIdx + 1) % THEME_CYCLE.length;
-            const nextThemeId = THEME_CYCLE[nextIdx];
-            applyTheme(nextThemeId, true);
-
-            // Show HUD indicator
-            const theme = THEME_MANIFESTS[nextThemeId];
-            showThemeToast(theme);
+        function applyTheme(styleOrLegacyId, saveToStorage = true) {
+            return applyThemeConfig(styleOrLegacyId, currentBgEffects, saveToStorage, false);
         }
 
-        function showThemeToast(theme) {
+        function cycleNextTheme() {
+            const currentIdx = STYLE_CYCLE.indexOf(currentStyleId);
+            const nextIdx = (currentIdx + 1) % STYLE_CYCLE.length;
+            const nextStyleId = STYLE_CYCLE[nextIdx];
+            applyThemeConfig(nextStyleId, currentBgEffects, true, true);
+        }
+
+        function toggleBackgroundEffects() {
+            const nextBg = !currentBgEffects;
+            applyThemeConfig(currentStyleId, nextBg, true, true);
+        }
+
+        function showThemeToast(styleMeta, bgOn) {
             let toast = document.getElementById('theme-switch-toast');
             if (!toast) {
                 toast = document.createElement('div');
@@ -2286,11 +2619,12 @@
                 toast.className = 'theme-toast';
                 document.body.appendChild(toast);
             }
+            const effectStatus = (typeof bgOn === 'boolean' ? bgOn : currentBgEffects) ? 'Hiệu ứng nền: BẬT' : 'Hiệu ứng nền: TẮT';
             toast.innerHTML = `
                 <div class="theme-toast-icon"><img src="icons/icon_theme.png" style="width:34px;height:34px;border-radius:8px;object-fit:cover;display:block;"></div>
                 <div class="theme-toast-content">
-                    <div class="theme-toast-title">ĐÃ CHUYỂN GIAO DIỆN</div>
-                    <div class="theme-toast-name">${theme.name}</div>
+                    <div class="theme-toast-title">THEME CYBERTV • ${effectStatus}</div>
+                    <div class="theme-toast-name">Phong cách: ${styleMeta.name} (${styleMeta.fullName})</div>
                 </div>
             `;
             toast.classList.add('show');
@@ -2301,18 +2635,70 @@
         }
 
         function initSavedTheme() {
-            let saved = 'cyber';
+            let loadedStyle = 'neon';
+            let loadedBg = true;
+            let migrated = false;
+
             try {
-                if (window.AndroidBridge && window.AndroidBridge.getSavedTheme) {
-                    saved = window.AndroidBridge.getSavedTheme();
+                // 1. Ưu tiên đọc từ AndroidBridge (đã tích hợp tự động migrate từ current_theme cũ)
+                if (window.AndroidBridge && typeof window.AndroidBridge.getThemeConfig === 'function') {
+                    const rawJson = window.AndroidBridge.getThemeConfig();
+                    if (rawJson) {
+                        const parsed = JSON.parse(rawJson);
+                        loadedStyle = normalizeStyleId(parsed.style);
+                        loadedBg = (typeof parsed.bgEffects === 'boolean') ? parsed.bgEffects : true;
+                        migrated = true;
+                    }
+                }
+
+                // 2. Kiểm tra localStorage nếu chạy trên trình duyệt hoặc cần đồng bộ
+                if (!migrated) {
+                    const savedConfigStr = localStorage.getItem('cybertv_theme_config');
+                    if (savedConfigStr) {
+                        const parsed = JSON.parse(savedConfigStr);
+                        loadedStyle = normalizeStyleId(parsed.style);
+                        loadedBg = (typeof parsed.bgEffects === 'boolean') ? parsed.bgEffects : true;
+                    } else {
+                        // Migrate từ khóa cũ 'cybertv_theme' hoặc AndroidBridge.getSavedTheme()
+                        let legacy = localStorage.getItem('cybertv_theme');
+                        if (!legacy && window.AndroidBridge && typeof window.AndroidBridge.getSavedTheme === 'function') {
+                            legacy = window.AndroidBridge.getSavedTheme();
+                        }
+                        if (legacy) {
+                            const clean = String(legacy).trim().toLowerCase();
+                            if (clean === 'minimal') {
+                                loadedStyle = 'minimal';
+                                loadedBg = false; // Giữ nguyên trạng thái tắt hiệu ứng của Minimal cũ
+                            } else if (clean === 'cinema' || clean === 'gold') {
+                                loadedStyle = 'gold';
+                                loadedBg = true;
+                            } else {
+                                loadedStyle = 'neon';
+                                loadedBg = true;
+                            }
+                        }
+                        // Lưu ngay cấu trúc mới sau khi migrate
+                        localStorage.setItem('cybertv_theme_config', JSON.stringify({
+                            themeId: 'cybertv',
+                            style: loadedStyle,
+                            bgEffects: loadedBg
+                        }));
+                        localStorage.removeItem('cybertv_theme');
+                    }
                 } else {
-                    saved = localStorage.getItem('cybertv_theme') || 'cyber';
+                    // Đồng bộ sang localStorage
+                    localStorage.setItem('cybertv_theme_config', JSON.stringify({
+                        themeId: 'cybertv',
+                        style: loadedStyle,
+                        bgEffects: loadedBg
+                    }));
+                    localStorage.removeItem('cybertv_theme');
                 }
             } catch (e) {
-                console.warn('Bridge getSavedTheme error', e);
-                saved = localStorage.getItem('cybertv_theme') || 'cyber';
+                console.warn('initSavedTheme migration error:', e);
             }
-            applyTheme(saved, false);
+
+            applyThemeConfig(loadedStyle, loadedBg, false, false);
         }
 
         // Load Original App Icons directly from Android System
@@ -2344,5 +2730,7 @@
         }, 150);
         window.addEventListener('load', loadRealAppIcons);
     </script>
+    <script src="premium-paywall.js"></script>
+    <script src="themes-engine.js"></script>
 </body>
 </html>

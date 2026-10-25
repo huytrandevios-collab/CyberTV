@@ -1,0 +1,45 @@
+{
+  "id": "cybertv",
+  "name": "CyberTV",
+  "version": "2.0.0",
+  "author": "CyberTV Studio",
+  "defaultStyle": "neon",
+  "settings": {
+    "backgroundEffects": true
+  },
+  "styles": {
+    "neon": {
+      "id": "neon",
+      "name": "Neon",
+      "primaryAccent": "#00f2fe",
+      "secondaryAccent": "#4facfe",
+      "background": "radial-gradient(circle at 85% 15%, rgba(35, 75, 140, 0.45) 0%, rgba(4, 7, 16, 0.98) 70%)",
+      "cardRadius": "16px",
+      "focusBorder": "#00f2fe",
+      "focusShadow": "0 0 18px rgba(0, 242, 254, 0.42), 0 4px 16px rgba(0, 0, 0, 0.6)",
+      "particleRgb": "0, 242, 254"
+    },
+    "minimal": {
+      "id": "minimal",
+      "name": "Minimal",
+      "primaryAccent": "#90CAF9",
+      "secondaryAccent": "#64B5F6",
+      "background": "radial-gradient(circle at 50% 0%, #151d28 0%, #080a0f 85%)",
+      "cardRadius": "12px",
+      "focusBorder": "#ffffff",
+      "focusShadow": "0 0 0 2px #64B5F6, 0 6px 20px rgba(0, 0, 0, 0.75)",
+      "particleRgb": "144, 202, 249"
+    },
+    "gold": {
+      "id": "gold",
+      "name": "Gold",
+      "primaryAccent": "#ffd700",
+      "secondaryAccent": "#f39c12",
+      "background": "radial-gradient(circle at 80% 15%, rgba(70, 50, 12, 0.55) 0%, #080705 70%)",
+      "cardRadius": "14px",
+      "focusBorder": "#ffd700",
+      "focusShadow": "0 0 24px rgba(255, 215, 0, 0.5), 0 6px 22px rgba(0, 0, 0, 0.9)",
+      "particleRgb": "255, 215, 0"
+    }
+  }
+}

@@ -2,6 +2,7 @@ package com.cyber.tv.launcher;
 
 import android.annotation.SuppressLint;
 import android.app.Activity;
+import android.content.Intent;
 import android.media.AudioManager;
 import android.os.Bundle;
 import android.util.Log;
@@ -67,6 +68,12 @@ public class MainActivity extends Activity {
 
         httpServer = new TVHttpServer(this, webView, 8080);
         httpServer.start();
+
+        try {
+            startService(new Intent(this, AutoStartService.class));
+        } catch (Exception e) {
+            Log.e("CyberTV", "Failed to start AutoStartService", e);
+        }
 
         webView.loadUrl("file:///android_asset/index.html");
     }

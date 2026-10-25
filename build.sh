@@ -26,9 +26,7 @@ mkdir -p build/classes
 
 echo "==> 1. Compiling Java classes..."
 "$JAVAC" -cp "$ANDROID_JAR" -d build/classes \
-    src/com/cyber/tv/launcher/MainActivity.java \
-    src/com/cyber/tv/launcher/AndroidBridge.java \
-    src/com/cyber/tv/launcher/TVHttpServer.java
+    src/com/cyber/tv/launcher/*.java
 
 echo "==> 2. Converting bytecode with D8..."
 "$D8" --output build/ build/classes/com/cyber/tv/launcher/*.class

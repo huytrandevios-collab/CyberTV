@@ -1,0 +1,7 @@
+{
+  "id": "cinema-horizon",
+  "name": "Cinema Horizon",
+  "version": "1.0.0",
+  "layout": "cinema-billboard",
+  "accent": "#e5b869"
+}

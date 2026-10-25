@@ -1,0 +1,7 @@
+{
+  "id": "nexus-command",
+  "name": "Nexus Command",
+  "version": "1.0.0",
+  "layout": "bento-command",
+  "accent": "#10b981"
+}

@@ -1,0 +1,7 @@
+{
+  "id": "orbit-os",
+  "name": "Orbit OS",
+  "version": "1.0.0",
+  "layout": "spatial-orbit",
+  "accent": "#60a5fa"
+}

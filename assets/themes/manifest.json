@@ -1,39 +1,189 @@
 {
-  "engineVersion": "1.0.0",
-  "defaultTheme": "cyber",
+  "engineVersion": "4.0.0",
+  "defaultTheme": "cybertv-classic",
+  "defaultStyle": "neon",
+  "defaultBackgroundEffects": true,
+  "legacyMigrationMap": {
+    "cyber": {
+      "themeId": "cybertv-classic",
+      "style": "neon",
+      "backgroundEffects": true
+    },
+    "minimal": {
+      "themeId": "cybertv-classic",
+      "style": "minimal",
+      "backgroundEffects": false
+    },
+    "cinema": {
+      "themeId": "cybertv-classic",
+      "style": "gold",
+      "backgroundEffects": true
+    },
+    "cybertv": {
+      "themeId": "cybertv-classic",
+      "style": "neon",
+      "backgroundEffects": true
+    }
+  },
+  "settings": {
+    "backgroundEffects": {
+      "type": "boolean",
+      "default": true,
+      "label": "Hiệu ứng nền & Chuyển động (Tắt cho TV cấu hình thấp)"
+    }
+  },
   "themes": [
     {
-      "id": "cyber",
-      "name": "Cyber Neon",
-      "version": "1.0.0",
+      "id": "cybertv-classic",
+      "name": "CyberTV Classic",
+      "subtitle": "Kệ ngang thông minh • 3 Phong cách màu",
+      "version": "4.0.0",
+      "isPremium": false,
       "author": "CyberTV Studio",
-      "accent": "#00f2fe",
       "layout": "horizontal-shelf",
-      "canvasParticles": true,
-      "lowPowerMode": false,
-      "description": "Futuristic spatial launcher with neon blue cyber aesthetic, 3D particle canvas and glowing laser focus."
+      "accent": "#00f2fe",
+      "secondaryAccent": "#4facfe",
+      "bgHex": "#060A12",
+      "cardHex": "#0F172A",
+      "focusBorder": "#00f2fe",
+      "description": "Giao diện kệ ngang kinh điển của CyberTV với Spotlight động, bộ lọc thể loại trực tiếp và 3 phong cách màu: Neon, Minimal, Gold.",
+      "styles": [
+        {
+          "id": "neon",
+          "name": "Neon",
+          "fullName": "Cyber Neon",
+          "accent": "#00f2fe",
+          "secondaryAccent": "#4facfe",
+          "focusBorder": "#00f2fe",
+          "cardRadius": "16px",
+          "description": "Ánh sáng Cyber Neon Cyan sắc nét trên nền đêm sâu."
+        },
+        {
+          "id": "minimal",
+          "name": "Minimal",
+          "fullName": "Minimal Dark Glass",
+          "accent": "#90CAF9",
+          "secondaryAccent": "#64B5F6",
+          "focusBorder": "#ffffff",
+          "cardRadius": "12px",
+          "description": "Kính đen mờ tối giản với viền lấy nét trắng băng tuyết."
+        },
+        {
+          "id": "gold",
+          "name": "Gold",
+          "fullName": "Luxury Gold Cinema",
+          "accent": "#ffd700",
+          "secondaryAccent": "#f39c12",
+          "focusBorder": "#ffd700",
+          "cardRadius": "14px",
+          "description": "Sắc vàng 24K hoàng gia trên nền đen Obsidian."
+        }
+      ]
     },
     {
-      "id": "minimal",
-      "name": "Minimal Dark Glass",
+      "id": "cinema-horizon",
+      "name": "Cinema Horizon",
+      "subtitle": "Màn ảnh rộng Billboard • Champagne & Obsidian",
       "version": "1.0.0",
+      "isPremium": true,
       "author": "CyberTV Studio",
-      "accent": "#90CAF9",
-      "layout": "vertical-rail",
-      "canvasParticles": false,
-      "lowPowerMode": true,
-      "description": "Ultra-clean dark studio slate with frosted glass cards, no motion distraction and near-zero CPU consumption."
+      "layout": "cinema-billboard",
+      "accent": "#e5b869",
+      "secondaryAccent": "#c8963e",
+      "bgHex": "#070605",
+      "cardHex": "#14110D",
+      "focusBorder": "#f3c878",
+      "description": "Hình ảnh nội dung nổi bật chiếm trọn không gian phía trên với tiêu đề điện ảnh lớn, điều hướng ngang trên đỉnh và hai dãy Kênh truyền hình & Xem tiếp bên dưới."
     },
     {
-      "id": "cinema",
-      "name": "Luxury Gold Cinema",
+      "id": "orbit-os",
+      "name": "Orbit OS",
+      "subtitle": "Quỹ đạo không gian • Tâm truyền hình trực tiếp",
       "version": "1.0.0",
+      "isPremium": true,
       "author": "CyberTV Studio",
-      "accent": "#ffd700",
-      "layout": "cinematic-billboard",
-      "canvasParticles": true,
-      "lowPowerMode": false,
-      "description": "Premium 24K Royal Gold & Obsidian Black IMAX cinema lounge aesthetic with warm ambient aura."
+      "layout": "spatial-orbit",
+      "accent": "#60a5fa",
+      "secondaryAccent": "#38bdf8",
+      "bgHex": "#040914",
+      "cardHex": "#0D182C",
+      "focusBorder": "#7dd3fc",
+      "description": "Bố cục không gian với các ứng dụng và kênh sắp xếp theo quỹ đạo tròn quanh tâm xem trước truyền hình, kết hợp bảng chào buổi tối, đồng hồ lớn và thẻ gợi ý bên trái."
+    },
+    {
+      "id": "zen-gallery",
+      "name": "Zen Gallery",
+      "subtitle": "Kiến trúc sáng ngà • Khung tranh & Thẻ dọc",
+      "version": "1.0.0",
+      "isPremium": true,
+      "author": "CyberTV Studio",
+      "layout": "architectural-gallery",
+      "accent": "#b08d57",
+      "secondaryAccent": "#8c6d3f",
+      "bgHex": "#F3EFE6",
+      "cardHex": "#E6E0D3",
+      "focusBorder": "#9a7432",
+      "description": "Phong cách kiến trúc tối giản nền sáng ngà dịu mắt, khung truyền hình lớn bên trái, cột thẻ thời tiết và gợi ý bên phải cùng thanh dock ứng dụng phía dưới."
+    },
+    {
+      "id": "nexus-command",
+      "name": "Nexus Command",
+      "subtitle": "Trung tâm điều khiển Bento • Emerald & Graphite",
+      "version": "1.0.0",
+      "isPremium": true,
+      "author": "CyberTV Studio",
+      "layout": "bento-command",
+      "accent": "#10b981",
+      "secondaryAccent": "#14b8a6",
+      "bgHex": "#06100E",
+      "cardHex": "#0D1F1B",
+      "focusBorder": "#34d399",
+      "description": "Thanh điều hướng dọc bên trái kết hợp lưới Bento đa nhiệm: màn hình truyền hình trực tiếp, bảng tổng hợp thông tin trong ngày, thời tiết, kênh nổi bật và ứng dụng yêu thích."
+    },
+    {
+      "id": "prism-float",
+      "name": "Prism Float",
+      "subtitle": "Lăng kính nổi đa lớp • Pha lê & Xanh băng",
+      "version": "1.0.0",
+      "isPremium": true,
+      "author": "CyberTV Studio",
+      "layout": "prism-spatial-float",
+      "accent": "#7dd3fc",
+      "secondaryAccent": "#e2e8f0",
+      "bgHex": "#081221",
+      "cardHex": "#13233D",
+      "focusBorder": "#ffffff",
+      "description": "Thanh điều hướng kính mờ dọc bên trái, khung truyền hình nổi ở trung tâm phía trước, khung giới thiệu phim phía trên bên phải và dải nội dung gần đây phía dưới bên phải."
+    },
+    {
+      "id": "edition-noir",
+      "name": "Edition Noir",
+      "subtitle": "Tạp chí điện ảnh • Đen mờ, Chữ ngà & Đỏ rượu",
+      "version": "1.0.0",
+      "isPremium": true,
+      "author": "CyberTV Studio",
+      "layout": "editorial-noir-magazine",
+      "accent": "#b91c1c",
+      "secondaryAccent": "#ef4444",
+      "bgHex": "#090808",
+      "cardHex": "#151212",
+      "focusBorder": "#f59e0b",
+      "description": "Bố cục bất đối xứng phong cách tạp chí điện ảnh: cột trái tiêu đề lớn & nút xem, giữa là poster dọc nổi bật, phải là hai khung ngang xếp chồng và thanh danh mục phía dưới."
+    },
+    {
+      "id": "sonata-lounge",
+      "name": "Sonata Lounge",
+      "subtitle": "Phòng nghe Hi-Fi • Espresso, Cognac, Đồng & Amber",
+      "version": "1.0.0",
+      "isPremium": true,
+      "author": "CyberTV Studio",
+      "layout": "hifi-sonata-console",
+      "accent": "#f59e0b",
+      "secondaryAccent": "#d97706",
+      "bgHex": "#120B07",
+      "cardHex": "#23150E",
+      "focusBorder": "#fbbf24",
+      "description": "Phong cách thiết bị Hi-Fi cao cấp: nửa trái là mâm đĩa/khung phát và điều khiển gắn với trình phát thật, nửa phải là 5 thẻ lớn (Nhạc thư giãn, Jazz, Hòa nhạc, Truyền hình, Ứng dụng) và hàng đợi gợi ý."
     }
   ]
 }

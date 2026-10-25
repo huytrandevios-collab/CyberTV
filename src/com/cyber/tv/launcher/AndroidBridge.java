@@ -54,24 +54,167 @@ public class AndroidBridge {
         return pkg;
     }
 
-    @JavascriptInterface
-    public void saveTheme(String themeId) {
-        try {
-            activity.getSharedPreferences("cybertv_prefs", Context.MODE_PRIVATE)
-                    .edit()
-                    .putString("current_theme", themeId)
+    private String normalizeThemeId(String raw) {
+        if (raw == null) return "cybertv-classic";
+        String t = raw.trim().toLowerCase();
+        switch (t) {
+            case "cinema-horizon":
+            case "orbit-os":
+            case "zen-gallery":
+            case "nexus-command":
+            case "prism-float":
+            case "edition-noir":
+            case "sonata-lounge":
+            case "cybertv-classic":
+                return t;
+            case "cybertv":
+            case "cyber":
+            case "minimal":
+            case "cinema":
+            case "neon":
+            case "gold":
+            default:
+                return "cybertv-classic";
+        }
+    }
+
+    private String normalizeStyle(String raw) {
+        if (raw == null) return "neon";
+        String s = raw.trim().toLowerCase();
+        if ("minimal".equals(s)) return "minimal";
+        if ("gold".equals(s) || "cinema".equals(s)) return "gold";
+        return "neon"; // "neon", "cyber", or fallback
+    }
+
+    private android.content.SharedPreferences getMigratedPrefs() {
+        android.content.SharedPreferences prefs = activity.getSharedPreferences("cybertv_prefs", Context.MODE_PRIVATE);
+        if (!prefs.contains("theme_v3_migrated")) {
+            String existingThemeId = prefs.getString("theme_id", null);
+            String existingStyle = prefs.getString("theme_style", null);
+            String legacy = prefs.getString("current_theme", null);
+
+            String migratedThemeId = "cybertv-classic";
+            String migratedStyle = "neon";
+            boolean migratedBgEffects = prefs.getBoolean("bg_effects", true);
+
+            String source = legacy != null ? legacy : (existingStyle != null ? existingStyle : existingThemeId);
+            if (source != null) {
+                String clean = source.trim().toLowerCase();
+                if ("minimal".equals(clean)) {
+                    migratedThemeId = "cybertv-classic";
+                    migratedStyle = "minimal";
+                    if (!prefs.contains("bg_effects")) {
+                        migratedBgEffects = false; // Giữ đúng trạng thái tắt hiệu ứng nền khi chuyển từ Minimal cũ
+                    }
+                } else if ("cinema".equals(clean) || "gold".equals(clean)) {
+                    migratedThemeId = "cybertv-classic";
+                    migratedStyle = "gold";
+                } else if (!"cybertv-classic".equals(normalizeThemeId(clean))) {
+                    migratedThemeId = normalizeThemeId(clean);
+                    migratedStyle = normalizeStyle(existingStyle);
+                } else {
+                    migratedThemeId = "cybertv-classic";
+                    migratedStyle = "neon";
+                }
+            }
+            if (existingThemeId != null) {
+                String normExisting = normalizeThemeId(existingThemeId);
+                if (!"cybertv-classic".equals(normExisting)) {
+                    migratedThemeId = normExisting;
+                }
+            }
+
+            prefs.edit()
+                    .putString("theme_id", migratedThemeId)
+                    .putString("theme_style", migratedStyle)
+                    .putBoolean("bg_effects", migratedBgEffects)
+                    .putBoolean("theme_v3_migrated", true)
+                    .remove("current_theme")
                     .apply();
+        }
+        return prefs;
+    }
+
+    @JavascriptInterface
+    public String getThemeConfig() {
+        try {
+            android.content.SharedPreferences prefs = getMigratedPrefs();
+            JSONObject obj = new JSONObject();
+            obj.put("themeId", normalizeThemeId(prefs.getString("theme_id", "cybertv-classic")));
+            obj.put("style", normalizeStyle(prefs.getString("theme_style", "neon")));
+            obj.put("bgEffects", prefs.getBoolean("bg_effects", true));
+            return obj.toString();
+        } catch (Exception e) {
+            return "{\"themeId\":\"cybertv-classic\",\"style\":\"neon\",\"bgEffects\":true}";
+        }
+    }
+
+    @JavascriptInterface
+    public void saveThemeConfig(String themeId, String style, boolean bgEffects) {
+        try {
+            android.content.SharedPreferences prefs = getMigratedPrefs();
+            prefs.edit()
+                    .putString("theme_id", normalizeThemeId(themeId))
+                    .putString("theme_style", normalizeStyle(style))
+                    .putBoolean("bg_effects", bgEffects)
+                    .putBoolean("theme_v3_migrated", true)
+                    .remove("current_theme")
+                    .apply();
+        } catch (Exception ignored) {}
+    }
+
+    @JavascriptInterface
+    public void saveTheme(String themeOrLegacyId) {
+        try {
+            android.content.SharedPreferences prefs = getMigratedPrefs();
+            String clean = themeOrLegacyId != null ? themeOrLegacyId.trim().toLowerCase() : "cybertv-classic";
+            android.content.SharedPreferences.Editor editor = prefs.edit();
+            if ("neon".equals(clean) || "cyber".equals(clean) || "minimal".equals(clean) || "gold".equals(clean) || "cinema".equals(clean)) {
+                editor.putString("theme_id", "cybertv-classic");
+                editor.putString("theme_style", normalizeStyle(clean));
+            } else {
+                editor.putString("theme_id", normalizeThemeId(clean));
+            }
+            editor.putBoolean("theme_v3_migrated", true).remove("current_theme").apply();
         } catch (Exception ignored) {}
     }
 
     @JavascriptInterface
     public String getSavedTheme() {
         try {
-            return activity.getSharedPreferences("cybertv_prefs", Context.MODE_PRIVATE)
-                    .getString("current_theme", "cyber");
+            android.content.SharedPreferences prefs = getMigratedPrefs();
+            return normalizeThemeId(prefs.getString("theme_id", "cybertv-classic"));
         } catch (Exception e) {
-            return "cyber";
+            return "cybertv-classic";
         }
+    }
+
+    @JavascriptInterface
+    public String getSavedStyle() {
+        try {
+            android.content.SharedPreferences prefs = getMigratedPrefs();
+            return normalizeStyle(prefs.getString("theme_style", "neon"));
+        } catch (Exception e) {
+            return "neon";
+        }
+    }
+
+    @JavascriptInterface
+    public boolean getSavedBgEffects() {
+        try {
+            android.content.SharedPreferences prefs = getMigratedPrefs();
+            return prefs.getBoolean("bg_effects", true);
+        } catch (Exception e) {
+            return true;
+        }
+    }
+
+    @JavascriptInterface
+    public void saveBgEffects(boolean enabled) {
+        try {
+            android.content.SharedPreferences prefs = getMigratedPrefs();
+            prefs.edit().putBoolean("bg_effects", enabled).apply();
+        } catch (Exception ignored) {}
     }
 
     @JavascriptInterface
@@ -321,6 +464,29 @@ public class AndroidBridge {
         } catch (Exception e) {
             return "{\"totalMb\": 1800, \"availMb\": 850}";
         }
+    }
+
+    @JavascriptInterface
+    public String getLicenseInfo() {
+        return LicenseManager.getLicenseDetails(activity).toString();
+    }
+
+    @JavascriptInterface
+    public boolean isPremiumActive() {
+        return LicenseManager.isPremiumActive(activity);
+    }
+
+    @JavascriptInterface
+    public boolean activateLicense(String key) {
+        final boolean success = LicenseManager.activate(activity, key);
+        activity.runOnUiThread(() -> {
+            if (success) {
+                Toast.makeText(activity, "🎉 Chúc mừng! Bản quyền CyberTV Premium đã được kích hoạt thành công!", Toast.LENGTH_LONG).show();
+            } else {
+                Toast.makeText(activity, "❌ Mã kích hoạt không chính xác cho thiết bị này. Vui lòng kiểm tra lại!", Toast.LENGTH_SHORT).show();
+            }
+        });
+        return success;
     }
 
     private long parseMem(String line) {

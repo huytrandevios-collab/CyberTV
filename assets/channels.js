@@ -601,6 +601,138 @@ const ALL_CHANNELS = [
   }
 ];
 
+const ENTERTAINMENT_WATCH_HISTORY = [
+  {
+    id: "hist-netflix-1",
+    title: "Stranger Things: Thế Giới Ngược",
+    sub: "Mùa 4 Tập 7 • Còn 18:40",
+    app: "Netflix",
+    pkg: "com.netflix.ninja",
+    cat: "netflix",
+    badge: "NETFLIX",
+    badgeClass: "badge-netflix",
+    badgeBg: "#E50914",
+    res: "4K HDR",
+    duration: "Còn 18p",
+    progress: 75,
+    backdrop: "backdrops/netflix_scifi.jpg",
+    desc: "Một thị trấn nhỏ đối mặt với bí ẩn kỳ lạ liên quan đến các thí nghiệm bí mật và lực lượng siêu nhiên kinh hoàng."
+  },
+  {
+    id: "hist-youtube-1",
+    title: "Nhạc Lofi Chill 4K • Cố Đô Chiều Mưa",
+    sub: "Thư Giãn Làm Việc & Học Tập • Còn 25:10",
+    app: "YouTube",
+    pkg: "com.google.android.youtube.tv",
+    cat: "youtube",
+    badge: "YOUTUBE",
+    badgeClass: "badge-youtube",
+    badgeBg: "#FF0000",
+    res: "4K 60FPS",
+    duration: "Còn 25p",
+    progress: 82,
+    backdrop: "backdrops/kyoto_garden.jpg",
+    desc: "Không gian âm nhạc Lofi êm dịu hòa quyện tiếng mưa rơi nhẹ nhàng, giúp thư giãn tinh thần và tập trung tối đa."
+  },
+  {
+    id: "hist-chophim-1",
+    title: "Lật Mặt 7: Một Điều Ước",
+    sub: "Phim Chiếu Rạp 1080p • Đã xem 65:20",
+    app: "Cho Phim TV",
+    pkg: "com.chophim.tv",
+    cat: "chophim",
+    badge: "CHỢ PHIM",
+    badgeClass: "badge-chophim",
+    badgeBg: "#FF9F43",
+    res: "1080p FHD",
+    duration: "Còn 45p",
+    progress: 52,
+    backdrop: "backdrops/cinema_movie.jpg",
+    desc: "Câu chuyện cảm động về tình mẫu tử của người mẹ già một mình nuôi đàn con khôn lớn, chạm đến trái tim hàng triệu khán giả."
+  },
+  {
+    id: "hist-tizentube-1",
+    title: "Khám Phá Vũ Trụ 4K HDR • Hố Đen Kỳ Bí",
+    sub: "Khoa Học & Thiên Văn • Không quảng cáo",
+    app: "TizenTube",
+    pkg: "io.gh.reisxd.tizentube.cobalt",
+    cat: "tizentube",
+    badge: "TIZENTUBE",
+    badgeClass: "badge-tizentube",
+    badgeBg: "#00A8FF",
+    res: "4K HDR",
+    duration: "Còn 15p",
+    progress: 70,
+    backdrop: "backdrops/news_studio.jpg",
+    desc: "Hành trình thám hiểm những bí ẩn sâu thẳm nhất của vũ trụ, tái hiện hố đen siêu khối lượng qua công nghệ mô phỏng 4K."
+  },
+  {
+    id: "hist-netflix-2",
+    title: "Squid Game: Trò Chơi Sinh Tử",
+    sub: "Phần 2 Tập 4 • Còn 22:15",
+    app: "Netflix",
+    pkg: "com.netflix.ninja",
+    cat: "netflix",
+    badge: "NETFLIX",
+    badgeClass: "badge-netflix",
+    badgeBg: "#E50914",
+    res: "4K HDR",
+    duration: "Còn 22p",
+    progress: 55,
+    backdrop: "backdrops/netflix_scifi.jpg",
+    desc: "Hàng trăm người chơi kẹt tiền chấp nhận lời mời kỳ lạ tham gia các trò chơi trẻ con với giải thưởng 45,6 tỷ won."
+  },
+  {
+    id: "hist-youtube-2",
+    title: "Rap Việt 2024 • Tập Chung Kết 2",
+    sub: "Vòng Tranh Đấu & Trao Cúp • Đã xem 48:30",
+    app: "YouTube",
+    pkg: "com.google.android.youtube.tv",
+    cat: "youtube",
+    badge: "YOUTUBE",
+    badgeClass: "badge-youtube",
+    badgeBg: "#FF0000",
+    res: "1080p FHD",
+    duration: "Còn 35p",
+    progress: 60,
+    backdrop: "backdrops/football_stadium.jpg",
+    desc: "Đêm chung kết bùng nổ của các rapper trẻ tài năng với những màn trình diễn đỉnh cao và sự xuất hiện của các giám khảo quốc tế."
+  },
+  {
+    id: "hist-tizentube-2",
+    title: "Acoustic Coffee Shop Chill 4K",
+    sub: "Giai Điệu Buổi Sáng Êm Dịu • 4K HDR",
+    app: "TizenTube",
+    pkg: "io.gh.reisxd.tizentube.cobalt",
+    cat: "tizentube",
+    badge: "TIZENTUBE",
+    badgeClass: "badge-tizentube",
+    badgeBg: "#00A8FF",
+    res: "4K HDR",
+    duration: "Còn 10p",
+    progress: 88,
+    backdrop: "backdrops/hifi_music.jpg",
+    desc: "Tuyển tập những bản tình ca guitar acoustic mộc mạc nhẹ nhàng trong không gian quán cafe ấm cúng không quảng cáo."
+  },
+  {
+    id: "hist-chophim-2",
+    title: "Thám Tử Lừng Danh Conan",
+    sub: "Tập 1120: Vụ Án Biệt Thự Rừng Tuyết",
+    app: "Cho Phim TV",
+    pkg: "com.chophim.tv",
+    cat: "chophim",
+    badge: "CHỢ PHIM",
+    badgeClass: "badge-chophim",
+    badgeBg: "#FF9F43",
+    res: "1080p FHD",
+    duration: "Còn 12p",
+    progress: 40,
+    backdrop: "backdrops/art_oil_masterpiece.jpg",
+    desc: "Conan và nhóm bạn bị mắc kẹt tại căn biệt thự giữa bão tuyết, nơi những manh mối bí ẩn dần hé lộ thủ phạm thực sự."
+  }
+];
+
 if (typeof window !== "undefined") {
     window.ALL_CHANNELS = ALL_CHANNELS;
+    window.ENTERTAINMENT_WATCH_HISTORY = ENTERTAINMENT_WATCH_HISTORY;
 }

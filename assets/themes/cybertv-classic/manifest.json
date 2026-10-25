@@ -1,0 +1,7 @@
+{
+  "id": "cybertv-classic",
+  "name": "CyberTV Classic",
+  "version": "3.0.0",
+  "layout": "horizontal-shelf",
+  "styles": ["neon", "minimal", "gold"]
+}
