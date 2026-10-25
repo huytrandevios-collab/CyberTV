@@ -93,9 +93,18 @@
 
                 <div id="paywall-target-banner" class="paywall-target-banner" style="display:none;"></div>
 
+                <div class="paywall-tabs" style="display:flex;gap:12px;margin-bottom:8px;">
+                    <button id="tab-btn-vietqr" class="paywall-tab-btn active paywall-focusable" style="padding:10px 18px;border-radius:12px;background:linear-gradient(135deg,rgba(0,242,254,0.2),rgba(79,172,254,0.2));border:1px solid #00f2fe;color:#fff;font-size:13px;font-weight:700;cursor:pointer;">
+                        🇻🇳 MBBank VietQR (79.000 VNĐ)
+                    </button>
+                    <button id="tab-btn-paypal" class="paywall-tab-btn paywall-focusable" style="padding:10px 18px;border-radius:12px;background:rgba(255,255,255,0.06);border:1px solid rgba(255,255,255,0.15);color:#94a3b8;font-size:13px;font-weight:700;cursor:pointer;">
+                        🌍 Google Pay & PayPal ($2.99 USD)
+                    </button>
+                </div>
+
                 <div class="paywall-body">
                     <!-- Left: VietQR Card -->
-                    <div class="paywall-qr-card">
+                    <div id="method-card-vietqr" class="paywall-qr-card">
                         <div class="paywall-qr-wrap">
                             <img id="paywall-qr-img" src="${licenseData.vietQrUrl}" alt="VietQR MBBank" />
                         </div>
@@ -120,6 +129,21 @@
                                 <span class="label">Nội dung CK:</span>
                                 <span class="val highlight" id="paywall-memo-val">${licenseData.memo}</span>
                             </div>
+                        </div>
+                    </div>
+
+                    <!-- Left Alternative: PayPal & Google Pay Card -->
+                    <div id="method-card-paypal" class="paywall-qr-card" style="display:none;flex-direction:column;align-items:center;justify-content:center;padding:20px;gap:14px;">
+                        <div style="font-size:14px;font-weight:800;color:#f59e0b;letter-spacing:0.5px;">
+                            💳 GOOGLE PAY & PAYPAL CHECKOUT
+                        </div>
+                        <div style="font-size:11px;color:#94a3b8;text-align:center;">
+                            Hỗ trợ Google Pay, Thẻ Visa/Mastercard và tài khoản PayPal
+                        </div>
+                        <div id="paypal-button-container" style="width:100%;min-height:80px;display:flex;flex-direction:column;gap:8px;"></div>
+                        <div style="background:rgba(255,255,255,0.04);border:1px dashed rgba(255,255,255,0.2);border-radius:14px;padding:12px;text-align:center;width:100%;">
+                            <div style="font-size:11px;color:#cbd5e1;margin-bottom:6px;">📱 Hoặc quét mã mở Google Pay trên điện thoại:</div>
+                            <img style="width:130px;height:130px;border-radius:8px;background:#fff;padding:4px;" src="https://api.qrserver.com/v1/create-qr-code/?size=180x180&data=${encodeURIComponent('https://www.paypal.com/checkoutnow?token=cybertv_' + licenseData.deviceUid)}" alt="PayPal Google Pay QR" />
                         </div>
                     </div>
 
@@ -163,8 +187,99 @@
         document.getElementById('btn-trial-24h').addEventListener('click', handleTrialActivate);
         document.getElementById('btn-close-paywall').addEventListener('click', hidePaywall);
 
+        document.getElementById('tab-btn-vietqr').addEventListener('click', () => switchMethodTab('vietqr'));
+        document.getElementById('tab-btn-paypal').addEventListener('click', () => switchMethodTab('paypal'));
+
         // Remote Navigation focus elements
         focusableItems = Array.from(modal.querySelectorAll('.paywall-focusable'));
+    }
+
+    let paypalLoaded = false;
+    function switchMethodTab(tab) {
+        const btnVn = document.getElementById('tab-btn-vietqr');
+        const btnPp = document.getElementById('tab-btn-paypal');
+        const cardVn = document.getElementById('method-card-vietqr');
+        const cardPp = document.getElementById('method-card-paypal');
+
+        if (tab === 'paypal') {
+            btnVn.style.background = 'rgba(255,255,255,0.06)';
+            btnVn.style.borderColor = 'rgba(255,255,255,0.15)';
+            btnVn.style.color = '#94a3b8';
+            btnPp.style.background = 'linear-gradient(135deg,rgba(245,158,11,0.25),rgba(217,119,6,0.25))';
+            btnPp.style.borderColor = '#f59e0b';
+            btnPp.style.color = '#fff';
+            cardVn.style.display = 'none';
+            cardPp.style.display = 'flex';
+            loadPayPalSDK();
+        } else {
+            btnPp.style.background = 'rgba(255,255,255,0.06)';
+            btnPp.style.borderColor = 'rgba(255,255,255,0.15)';
+            btnPp.style.color = '#94a3b8';
+            btnVn.style.background = 'linear-gradient(135deg,rgba(0,242,254,0.2),rgba(79,172,254,0.2))';
+            btnVn.style.borderColor = '#00f2fe';
+            btnVn.style.color = '#fff';
+            cardPp.style.display = 'none';
+            cardVn.style.display = 'flex';
+        }
+        focusableItems = Array.from(paywallModal.querySelectorAll('.paywall-focusable')).filter(el => el.offsetParent !== null);
+    }
+
+    function loadPayPalSDK() {
+        if (paypalLoaded) return;
+        const script = document.createElement('script');
+        script.src = 'https://www.paypal.com/sdk/js?client-id=BAAyo6ZCcBWj4stab8r0jzblAsBwSlkBCiYttlefhdKBuk6CpJuI7hm-4VLHHwpDmyKT1xDND0SnqAQTcA&currency=USD&enable-funding=venmo,paylater';
+        script.onload = function() {
+            paypalLoaded = true;
+            renderPayPalButtons();
+        };
+        script.onerror = function() {
+            console.warn("Could not load PayPal SDK online");
+        };
+        document.head.appendChild(script);
+    }
+
+    function renderPayPalButtons() {
+        const container = document.getElementById('paypal-button-container');
+        if (!container || !window.paypal) return;
+        container.innerHTML = '';
+        try {
+            window.paypal.Buttons({
+                style: {
+                    layout: 'vertical',
+                    color: 'gold',
+                    shape: 'rect',
+                    label: 'paypal',
+                    height: 38
+                },
+                createOrder: function(data, actions) {
+                    return actions.order.create({
+                        purchase_units: [{
+                            description: 'CyberTV Premium Device License - ' + licenseData.deviceUid,
+                            amount: {
+                                currency_code: 'USD',
+                                value: '2.99'
+                            }
+                        }]
+                    });
+                },
+                onApprove: function(data, actions) {
+                    return actions.order.capture().then(function(details) {
+                        const orderId = data.orderID || ('PAYPAL_' + Date.now());
+                        if (window.AndroidBridge && typeof window.AndroidBridge.activateLicense === 'function') {
+                            window.AndroidBridge.activateLicense('PAYPAL_' + orderId);
+                        } else {
+                            localStorage.setItem('cybertv_premium_active', 'true');
+                        }
+                        try {
+                            fetch('/api/payment_notify?amount=2.99&currency=USD&order=' + orderId + '&uid=' + licenseData.deviceUid);
+                        } catch(e) {}
+                        window.onLicenseActivated();
+                    });
+                }
+            }).render('#paypal-button-container');
+        } catch(e) {
+            console.error("PayPal render error:", e);
+        }
     }
 
     function showPaywall(targetType, targetName) {
