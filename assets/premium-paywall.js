@@ -15,6 +15,7 @@
     let paywallModal = null;
     let focusableItems = [];
     let currentFocusIndex = 0;
+    let isHardLocked = false;
 
     window.isPremiumActive = function() {
         if (window.AndroidBridge && typeof window.AndroidBridge.isPremiumActive === 'function') {
@@ -57,10 +58,21 @@
             return;
         }
 
-        // Show startup paywall modal only once if not activated and trial not used
+        // Kiểm tra trạng thái bản quyền: Nếu hết hạn dùng thử -> KHÓA TOÀN MÀN HÌNH FULL TIVI
         const trialKey = 'cybertv_trial_used_' + licenseData.deviceUid;
-        if (!localStorage.getItem(trialKey)) {
-            showPaywall();
+        const trialVal = localStorage.getItem(trialKey);
+        
+        if (trialVal) {
+            const timestamp = parseInt(trialVal, 10);
+            const trialDuration = 24 * 60 * 60 * 1000; // 24 giờ
+            if (Date.now() - timestamp >= trialDuration) {
+                // Đã hết hạn dùng thử -> Khóa cứng toàn màn hình
+                showPaywall('hard_lock_expired');
+                return;
+            }
+        } else {
+            // Thiết bị mới chưa mua bản quyền -> Hiển thị khóa thanh toán mở khóa vĩnh viễn
+            showPaywall('hard_lock_new');
         }
     }
 
@@ -159,23 +171,50 @@
         if (!paywallModal) renderPaywallDOM();
 
         const banner = document.getElementById('paywall-target-banner');
-        if (banner) {
-            if (targetType === 'theme') {
-                banner.innerHTML = `👑 Giao diện <b>${targetName || ''}</b> là đặc quyền của <b>CyberTV Premium</b>. Quét mã MBBank 79.000đ để mở khóa vĩnh viễn!`;
+        const btnClose = document.getElementById('btn-close-paywall');
+        const btnTrial = document.getElementById('btn-trial-24h');
+
+        if (targetType === 'hard_lock_expired') {
+            isHardLocked = true;
+            paywallModal.classList.add('hard-locked');
+            if (banner) {
+                banner.innerHTML = `🔒 <b>HẾT HẠN DÙNG THỬ BẢN QUYỀN</b> — Màn hình TV đã bị khóa toàn bộ. Quét mã VietQR MBBank 79.000đ để mở khóa vĩnh viễn trọn đời!`;
                 banner.style.display = 'block';
-            } else if (targetType === 'app') {
-                banner.innerHTML = `👑 Ứng dụng <b>${targetName || ''}</b> yêu cầu bản quyền <b>CyberTV Premium</b>. Quét mã MBBank 79.000đ để mở khóa!`;
+            }
+            if (btnClose) btnClose.style.display = 'none';
+            if (btnTrial) btnTrial.style.display = 'none';
+        } else if (targetType === 'hard_lock_new') {
+            isHardLocked = true;
+            paywallModal.classList.add('hard-locked');
+            if (banner) {
+                banner.innerHTML = `🔒 <b>BẢN QUYỀN CYBERTV CHƯA KÍCH HOẠT</b> — Quét mã MBBank 79.000đ mở khóa trọn đời hoặc chọn Dùng Thử 24 Giờ để trải nghiệm!`;
                 banner.style.display = 'block';
-            } else if (targetType === 'channel') {
-                banner.innerHTML = `👑 Kênh <b>${targetName || ''}</b> thuộc nhóm truyền hình VIP Premium. Quét mã MBBank 79.000đ để xem!`;
-                banner.style.display = 'block';
-            } else {
-                banner.style.display = 'none';
+            }
+            if (btnClose) btnClose.style.display = 'none';
+        } else {
+            isHardLocked = false;
+            paywallModal.classList.remove('hard-locked');
+            if (btnClose) btnClose.style.display = 'inline-flex';
+            if (btnTrial) btnTrial.style.display = 'inline-flex';
+
+            if (banner) {
+                if (targetType === 'theme') {
+                    banner.innerHTML = `👑 Giao diện <b>${targetName || ''}</b> là đặc quyền của <b>CyberTV Premium</b>. Quét mã MBBank 79.000đ để mở khóa vĩnh viễn!`;
+                    banner.style.display = 'block';
+                } else if (targetType === 'app') {
+                    banner.innerHTML = `👑 Ứng dụng <b>${targetName || ''}</b> yêu cầu bản quyền <b>CyberTV Premium</b>. Quét mã MBBank 79.000đ để mở khóa!`;
+                    banner.style.display = 'block';
+                } else if (targetType === 'channel') {
+                    banner.innerHTML = `👑 Kênh <b>${targetName || ''}</b> thuộc nhóm truyền hình VIP Premium. Quét mã MBBank 79.000đ để xem!`;
+                    banner.style.display = 'block';
+                } else {
+                    banner.style.display = 'none';
+                }
             }
         }
 
         paywallModal.classList.add('active');
-        focusableItems = Array.from(paywallModal.querySelectorAll('.paywall-focusable'));
+        focusableItems = Array.from(paywallModal.querySelectorAll('.paywall-focusable')).filter(el => el.offsetParent !== null);
         if (focusableItems.length > 0) {
             currentFocusIndex = 0;
             focusCurrentItem();
@@ -236,6 +275,8 @@
         }
         localStorage.setItem(trialKey, Date.now());
         alert('🎉 Đã kích hoạt chế độ DÙNG THỬ 24 GIỜ thành công! Chúc bạn có trải nghiệm tuyệt vời cùng CyberTV Launcher!');
+        isHardLocked = false;
+        paywallModal.classList.remove('hard-locked');
         hidePaywall();
     }
 
@@ -288,6 +329,15 @@
         else if (code === 27 || code === 4 || code === 10009) {
             e.preventDefault();
             e.stopPropagation();
+            if (isHardLocked) {
+                // Rung cảnh báo không cho đóng khi đã bị khóa toàn màn hình
+                const container = document.querySelector('.paywall-container');
+                if (container) {
+                    container.classList.add('shake-anim');
+                    setTimeout(() => container.classList.remove('shake-anim'), 600);
+                }
+                return;
+            }
             hidePaywall();
         }
     }, true);

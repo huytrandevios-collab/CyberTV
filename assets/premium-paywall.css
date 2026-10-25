@@ -23,6 +23,25 @@
     opacity: 1;
 }
 
+#paywall-modal.hard-locked {
+    background: radial-gradient(circle at 50% 20%, rgba(15, 23, 42, 0.99), rgba(2, 6, 23, 1));
+}
+
+#paywall-modal.hard-locked .paywall-container {
+    border: 2px solid #ef4444;
+    box-shadow: 0 0 60px rgba(239, 68, 68, 0.35), inset 0 0 30px rgba(239, 68, 68, 0.1);
+}
+
+@keyframes paywallShake {
+    0%, 100% { transform: translateX(0); }
+    20%, 60% { transform: translateX(-12px); }
+    40%, 80% { transform: translateX(12px); }
+}
+
+.paywall-container.shake-anim {
+    animation: paywallShake 0.45s ease-in-out;
+}
+
 .paywall-container {
     width: 90vw;
     max-width: 1100px;
