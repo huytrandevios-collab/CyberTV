@@ -265,6 +265,21 @@ public class TVHttpServer {
                         res.put("modal", "apps");
                         jsonResponse = res.toString();
                     }
+                } else if ("/api/lock".equals(path)) {
+                    String action = query.get("action");
+                    final boolean isLock = !"unlock".equalsIgnoreCase(action);
+                    activity.runOnUiThread(() -> {
+                        if (isLock) {
+                            webView.evaluateJavascript("if (typeof showPaywall === 'function') { showPaywall('hard_lock_expired'); }", null);
+                        } else {
+                            webView.evaluateJavascript("if (typeof onLicenseActivated === 'function') { onLicenseActivated(); }", null);
+                        }
+                    });
+                    JSONObject res = new JSONObject();
+                    res.put("success", true);
+                    res.put("locked", isLock);
+                    res.put("message", isLock ? "Đã khóa TV từ xa theo lệnh của Admin" : "Đã mở khóa TV từ xa");
+                    jsonResponse = res.toString();
                 } else if ("/api/broadcast".equals(path)) {
                     String text = query.get("text");
                     if (text == null || text.isEmpty()) {
