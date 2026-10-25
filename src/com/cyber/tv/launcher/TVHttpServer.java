@@ -265,6 +265,62 @@ public class TVHttpServer {
                         res.put("modal", "apps");
                         jsonResponse = res.toString();
                     }
+                } else if ("/api/broadcast".equals(path)) {
+                    String text = query.get("text");
+                    if (text == null || text.isEmpty()) {
+                        text = "🎉 CyberTV Đạt Mốc 50 Thiết Bị Premium! Tri ân toàn bộ người dùng 48 giờ miễn phí!";
+                    }
+                    final String alertMsg = text;
+                    activity.runOnUiThread(() -> {
+                        webView.evaluateJavascript("if (typeof showEngineToast === 'function') { showEngineToast('THÔNG BÁO TỪ ADMIN', '" + alertMsg.replace("'", "\\'") + "'); } else { alert('" + alertMsg.replace("'", "\\'") + "'); }", null);
+                    });
+                    JSONObject res = new JSONObject();
+                    res.put("success", true);
+                    res.put("broadcast", alertMsg);
+                    jsonResponse = res.toString();
+
+                } else if ("/admin".equals(path) || "/admin/index.html".equals(path)) {
+                    String uid = LicenseManager.getDeviceUID(activity);
+                    boolean isPrem = LicenseManager.isPremiumActive(activity);
+                    String html = "<!DOCTYPE html><html lang='vi'><head><meta charset='UTF-8'><meta name='viewport' content='width=device-width,initial-scale=1.0'><title>CyberTV Admin Hub</title><style>" +
+                        "body{background:#070b14;color:#fff;font-family:-apple-system,BlinkMacSystemFont,'Segoe UI',Roboto,sans-serif;margin:0;padding:20px;}" +
+                        ".card{background:rgba(255,255,255,0.05);border:1px solid rgba(0,242,254,0.25);border-radius:16px;padding:18px;margin-bottom:16px;box-shadow:0 8px 32px rgba(0,0,0,0.4);}" +
+                        ".badge{background:linear-gradient(135deg,#00f2fe,#4facfe);color:#000;padding:3px 8px;border-radius:6px;font-size:11px;font-weight:900;}" +
+                        ".gold{color:#ffd700;}.green{color:#10b981;}.cyan{color:#00f2fe;}" +
+                        "button{width:100%;padding:12px;border:none;border-radius:12px;font-weight:bold;font-size:14px;cursor:pointer;margin-top:8px;}" +
+                        ".btn-pri{background:linear-gradient(90deg,#00f2fe,#0072ff);color:#000;}" +
+                        ".btn-gold{background:linear-gradient(90deg,#ffd700,#ff8c00);color:#000;}" +
+                        "</style></head><body>" +
+                        "<h2>👑 CyberTV Admin Control Center</h2>" +
+                        "<div class='card'>" +
+                        "<div><b>Thiết Bị:</b> <span class='cyan'>" + (Build.MODEL != null ? Build.MODEL : "Android TV") + "</span></div>" +
+                        "<div style='margin-top:6px;'><b>Device UID:</b> <span class='cyan'>" + uid + "</span></div>" +
+                        "<div style='margin-top:6px;'><b>Bản Quyền:</b> " + (isPrem ? "<span class='green'>✓ ĐÃ MUA PREMIUM (79K)</span>" : "<span class='gold'>⏳ CHỜ KÍCH HOẠT</span>") + "</div>" +
+                        "<div style='margin-top:6px;'><b>Tài Khoản MBBank:</b> <span class='gold'>1010157820008 (TRAN QUOC HUY)</span></div>" +
+                        "</div>" +
+                        "<div class='card'>" +
+                        "<div class='gold'><b>🏆 Cột Mốc 50 Thiết Bị Premium</b></div>" +
+                        "<p style='font-size:12px;opacity:0.8;'>Gửi thông báo tặng 48 giờ miễn phí toàn bộ Theme cao cấp và Kênh VIP tới màn hình TV.</p>" +
+                        "<button class='btn-gold' onclick=\"fetch('/api/broadcast').then(()=>alert('Đã gửi thông báo chúc mừng tới TV!'))\">📢 Phát Sóng Thông Báo 50 Lượt Miễn Phí</button>" +
+                        "</div>" +
+                        "<div class='card'>" +
+                        "<button class='btn-pri' onclick=\"fetch('/api/boost').then(()=>alert('Đã giải phóng RAM TV'))\">⚡ Tối Ưu & Dọn Dẹp RAM TV</button>" +
+                        "</div>" +
+                        "</body></html>";
+
+                    byte[] bodyBytes = html.getBytes("UTF-8");
+                    OutputStream out = socket.getOutputStream();
+                    String header = "HTTP/1.1 200 OK\r\n" +
+                            "Content-Type: text/html; charset=utf-8\r\n" +
+                            "Content-Length: " + bodyBytes.length + "\r\n" +
+                            "Access-Control-Allow-Origin: *\r\n" +
+                            "Connection: close\r\n\r\n";
+                    out.write(header.getBytes("UTF-8"));
+                    out.write(bodyBytes);
+                    out.flush();
+                    socket.close();
+                    return;
+
                 } else if ("/api/eval".equals(path)) {
                     String js = query.get("js");
                     if (js != null) {
